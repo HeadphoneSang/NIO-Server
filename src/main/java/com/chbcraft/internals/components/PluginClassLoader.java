@@ -1,5 +1,6 @@
 package com.chbcraft.internals.components;
 
+import com.chbcraft.internals.base.BaseComponentLoader;
 import com.chbcraft.internals.components.entries.config.Configuration;
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.loader.Loader;
@@ -20,7 +21,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class PluginClassLoader extends URLClassLoader{
+public class PluginClassLoader extends BaseComponentLoader {
     /**
      * 是否允许开启插件互相依赖
      */
@@ -205,6 +206,7 @@ public class PluginClassLoader extends URLClassLoader{
      */
     public Class<?> findClass(String name,boolean checkOther,boolean checkDepends) throws ClassNotFoundException, IOException, IllegalAccessException {
         Class<?> result = null;
+        boolean jie = false;
         if(classes.containsKey(name)){
             result = classes.get(name);
         }
@@ -240,6 +242,8 @@ public class PluginClassLoader extends URLClassLoader{
                     }
                 }
             }
+            if(result!=null)
+                jie = true;
         }
         if(result==null){
             byte[] clazzByte = getClazzBytes(name);
@@ -261,7 +265,7 @@ public class PluginClassLoader extends URLClassLoader{
                 result = defineClass(name,clazzByte,0,clazzByte.length,codeSource);
             }
         }
-        if(result!=null){
+        if(result!=null&&!jie){
             addClazz(name,result);
             processor.addClazz(name,result);
         }
@@ -283,6 +287,12 @@ public class PluginClassLoader extends URLClassLoader{
             return;
         classes.put(name, clazz);
     }
+
+    @Override
+    public void initialedPlugin(Plugin plugin, Configuration pluginDescription) {
+
+    }
+
     /**
      * 反向注入属性
      * @param plugin 注入的插件

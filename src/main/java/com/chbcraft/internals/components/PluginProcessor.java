@@ -4,16 +4,18 @@ import com.chbcraft.internals.components.entries.config.Configuration;
 import com.chbcraft.internals.components.entries.PluginEntry;
 import com.chbcraft.internals.components.enums.EventPriority;
 import com.chbcraft.internals.components.enums.SectionName;
-import com.chbcraft.internals.components.listen.EventHandler;
-import com.chbcraft.internals.components.listen.RegisteredListener;
+import com.chbcraft.internals.components.listen.*;
 import com.chbcraft.internals.components.loader.Loader;
 import com.chbcraft.internals.components.sysevent.Event;
 import com.chbcraft.internals.components.sysevent.EventExecutor;
 import com.chbcraft.internals.components.utils.ConfigurationUtil;
+import com.chbcraft.internals.components.utils.RegexUtil;
 import com.chbcraft.plugin.Plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +46,9 @@ public class PluginProcessor implements Loader {
     /**
      * 保存所有的插件加载器的引用和对应的插件的名称
      */
+
     private final ConcurrentHashMap<String, PluginClassLoader> allPlugins = new ConcurrentHashMap<>();
+
     private PluginProcessor() {
         super();
         Configuration prop = FloatSphere.createProperties();
@@ -75,6 +79,143 @@ public class PluginProcessor implements Loader {
         MessageBox.getLogger().log("Security-IO is not enable...");
     }
 
+    @Override
+    public Set<RegisteredRouter> createRegisteredRouter(Plugin plugin, Routers routers) {
+        if (!isValid(plugin)){
+            return null;
+        }
+        if(routers==null){
+            MessageBox.getLogger().warnTips("Routers in "+ Objects.requireNonNull(plugin).getName()+" is null!");
+            return null;
+        }
+        Class<? extends Routers> clazz = routers.getClass();
+        Method[] selfMethods = clazz.getDeclaredMethods();
+        HashSet<Method> methods = new HashSet<>(Arrays.asList(selfMethods));
+        Method[] selfAndParentsMethod = clazz.getMethods();
+        methods.addAll(Arrays.asList(selfAndParentsMethod));
+        if(methods.size()==0){
+            MessageBox.getLogger().warnTips("Routers in "+ Objects.requireNonNull(plugin).getName()+" is illegal!");
+            return null;
+        }
+        Iterator<Method> iterator = methods.iterator();
+        Set<RegisteredRouter> returnSet = new LinkedHashSet<>();
+        while(true){
+            Method tempMethod;
+            Annotation annotation;
+            do{
+                do{
+                    do{
+                        if(!iterator.hasNext())
+                            return returnSet;
+                        tempMethod = iterator.next();
+                        annotation = tempMethod.getAnnotation(Get.class);
+                        if(annotation==null) {
+                            annotation = tempMethod.getAnnotation(Post.class);
+                        }
+                    }while (annotation==null);
+                }while(tempMethod.isBridge());
+            }while (tempMethod.isSynthetic());
+            RegisteredRouter newRouter = new RegisteredRouter(plugin,tempMethod,routers);
+            Annotation[] tags = tempMethod.getDeclaredAnnotations();
+            for (Annotation tag : tags) {
+                if(tag.annotationType().getAnnotation(RouteType.class)!=null)
+                    continue;
+                newRouter.addTags(tag.annotationType());
+            }
+            if(annotation instanceof Post)
+            {
+                if(!initPostRouter(newRouter,plugin,annotation,tempMethod))
+                    continue;
+            }
+            else
+                if(!initGetRouter(newRouter,plugin,annotation,tempMethod))
+                    continue;
+            returnSet.add(newRouter);
+        }
+    }
+
+    /**
+     * GET方法的路由的解析方法
+     * @param newRouter 要添加到路由表的路由
+     * @param plugin 注册路由的插件
+     * @param annotation 路由方法的注解
+     * @param tempMethod 路由的方法
+     * @return 返回初始化是否从成功
+     */
+    private boolean initGetRouter(RegisteredRouter newRouter,Plugin plugin,Annotation annotation,Method tempMethod){
+        Get get = (Get) annotation;
+        newRouter.setRoute(get.value());
+        newRouter.setMethod(RegisteredRouter.RouteMethod.GET);
+        Map<String,Integer> varMap = RegexUtil.getPathVariable(get.value());
+        int[] mapArr = new int[varMap.size()];
+        /**
+         * 检查GET的router是否声明为一个REST路由
+         * 如果是REST路由,将路由方法的形参全部提取出来
+         * 并且记录形参的个数
+         */
+        int index = 0;
+        for (Annotation[] parameterAnnotation : tempMethod.getParameterAnnotations()) {
+            for (Annotation ano : parameterAnnotation) {
+                if (ano instanceof PathParams) {
+                    newRouter.setRest(true);
+                    newRouter.setParamLength(newRouter.getParamLength() + 1);
+                    if (varMap.get(((PathParams) ano).value()) == null) {
+                        MessageBox.getLogger().warn("invalid router method: " + tempMethod.getName() + " in " + plugin.getName()+"\n");
+                        return false;
+                    }
+                    mapArr[varMap.get(((PathParams) ano).value())] = index;
+                }
+            }
+            index++;
+        }
+        if(newRouter.isRest()&&newRouter.getParamLength()!=tempMethod.getParameterCount()){
+            MessageBox.getLogger().warn("invalid router method: "+tempMethod.getName()+" in "+plugin.getName());
+            return false;
+        }else if(newRouter.isRest()){
+            newRouter.setRoute(newRouter.getRoute().substring(0,newRouter.getRoute().indexOf("{")-1));
+            newRouter.setIndexMap(mapArr);
+        }else{
+            newRouter.setMethodParamsLength(tempMethod.getParameterCount());
+        }
+        return true;
+    }
+
+    /**
+     * 初始化POST方法的路由
+     * @param newRouter 将要加入路由表的新路由
+     * @param plugin 注册路由的插件
+     * @param annotation 路由的方法的注解
+     * @param tempMethod 路由的处理方法
+     * @return 返回是否注册成功
+     */
+    public boolean initPostRouter(RegisteredRouter newRouter,Plugin plugin,Annotation annotation,Method tempMethod){
+        Post post = (Post) annotation;
+        newRouter.setRoute(post.value());
+        newRouter.setMethod(RegisteredRouter.RouteMethod.POST);
+        if(tempMethod.getParameterCount()>1){
+            MessageBox.getLogger().warnTips("zanbuzhichi");
+            return false;
+        }else{
+            if(tempMethod.getParameterCount()==1){
+                for (Annotation ano : tempMethod.getParameterAnnotations()[0]) {
+                    if (ano instanceof PojoRequest){
+                        Class<? extends RegisteredRouter> clazz = newRouter.getClass();
+                        try {
+                            Field clazz1 = clazz.getDeclaredField("paramClazz");
+                            clazz1.setAccessible(true);
+                            clazz1.set(newRouter,tempMethod.getParameterTypes()[0]);
+                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        newRouter.setMethodParamsLength(tempMethod.getParameterCount());
+        return true;
+    }
+
+
     /**
      * 从Plugin对象和Listener对象中构造RegisteredListener数组
      * @param plugin 创建监听器的插件
@@ -83,22 +224,16 @@ public class PluginProcessor implements Loader {
      */
     @Override
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegistered(Plugin plugin, Listener listener){
-        if(plugin==null){
-            MessageBox.getLogger().warnTips("Plugin is not enable to set null!");
+        if(!isValid(plugin))
             return null;
-        }
         if(listener==null){
             MessageBox.getLogger().warnTips("Listener in "+ Objects.requireNonNull(plugin).getName()+" is null!");
-            return null;
-        }
-        if(!plugin.isEnable()){
-            MessageBox.getLogger().warnTips(plugin.getName()+"had already disable!");
             return null;
         }
         Class<? extends Listener> clazz = listener.getClass();
         Method[] selfMethods = clazz.getDeclaredMethods();
         HashSet<Method> methods = new HashSet<>(Arrays.asList(selfMethods));
-        Method[] selfAndParentsMethod = clazz.getDeclaredMethods();
+        Method[] selfAndParentsMethod = clazz.getMethods();
         methods.addAll(Arrays.asList(selfAndParentsMethod));
         if(methods.size()==0){
             MessageBox.getLogger().warnTips("Listener in "+ Objects.requireNonNull(plugin).getName()+" is illegal!");
@@ -143,6 +278,23 @@ public class PluginProcessor implements Loader {
                 MessageBox.getLogger().warnTips("We attempt register a EventHandler method in "+ listener.getClass().getSimpleName()+" but failed,The Method may has not just one Parameter");
             }
         }
+    }
+
+    /**
+     * 检查注册的插件是否还可以用
+     * @param plugin 注册的插件
+     * @return 返回是否可用
+     */
+    public boolean isValid(Plugin plugin){
+        if(plugin==null){
+            MessageBox.getLogger().warnTips("Plugin is not enable to set null!");
+            return false;
+        }
+        if(!plugin.isEnable()){
+            MessageBox.getLogger().warnTips(plugin.getName()+"had already disable!");
+            return false;
+        }
+        return true;
     }
     /**
      * 通过插件名获得插件
@@ -279,6 +431,7 @@ public class PluginProcessor implements Loader {
             plugin.disable();
         }
         FloatSphere.getPluginManager().unregisterEventListener(plugin);
+        FloatSphere.getPluginManager().unregisterRouter(plugin);
         this.allPlugins.remove(plugin.getName());
         ClassLoader loader = plugin.getClass().getClassLoader();
         if(!(loader instanceof PluginClassLoader))
@@ -290,6 +443,11 @@ public class PluginProcessor implements Loader {
             name = iterator.next();
             this.allClasses.remove(name);
         }
+        try {
+            ((PluginClassLoader) loader).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -300,5 +458,7 @@ public class PluginProcessor implements Loader {
             ret.add(temps.nextElement());
         return ret;
     }
+
+
 
 }

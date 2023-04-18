@@ -11,25 +11,25 @@ public interface BaseConfig {
      * @param key 键值 允许层级键值key1/key2
      * @return 返回浮点值或键值
      */
-    public double getDouble(String key);
+    double getDouble(String key);
     /**
      * 通过key获得整数值
      * @param key 键值 允许层级键值key1/key2
      * @return 返回int或者null
      */
-    public int getInt(String key);
+    int getInt(String key);
     /**
      * 通过key获得布尔值
      * @param key 键值 允许层级键值key1/key2
      * @return 返回布尔值或者null
      */
-    public boolean getBoolean(String key);
+    boolean getBoolean(String key);
     /**
      * 通过key获得字符串
      * @param key 键值 允许层级键值key1/key2
      * @return 返回属性字符串或者null
      */
-    public String getString(String key);
+    String getString(String key);
     /**
      * 通过键值获得Section
      * @param key 键值 允许层级键值key1/key2

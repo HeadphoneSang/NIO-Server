@@ -1,0 +1,99 @@
+package com.chbcraft.net.handlers.inbound;
+
+import com.chbcraft.internals.components.FloatSphere;
+import com.chbcraft.internals.components.MessageBox;
+import com.chbcraft.internals.components.listen.RegisteredRouter;
+import com.chbcraft.internals.components.sysevent.net.RequestInboundEvent;
+import com.chbcraft.net.handlers.router.GetRequestSorter;
+import com.chbcraft.net.handlers.router.PostRequestSorter;
+import com.chbcraft.net.handlers.router.RequestSorter;
+import com.chbcraft.net.handlers.router.RouterAdaptor;
+import com.chbcraft.net.handlers.outbound.HttpResponseMessage;
+import com.chbcraft.net.util.RequestUtil;
+import com.chbcraft.net.util.ResponseUtil;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.*;
+
+/**
+ * 接受普通的HTTP请求,根绝类型去匹配路由
+ * 然后去执行对应的路由方法,获得返回结果
+ */
+@ChannelHandler.Sharable
+public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private static final RouterAdaptor adaptor = new RouterAdaptor();
+    static {
+        adaptor
+                .addSorter(RegisteredRouter.RouteMethod.POST.name(), new PostRequestSorter())
+                .addSorter(RegisteredRouter.RouteMethod.GET.name(), new GetRequestSorter());
+    }
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        super.channelRead(ctx,msg);
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest request) throws Exception {
+        Object ret;
+        channelHandlerContext.channel().closeFuture().addListener(future -> {
+            if(future.isSuccess()){
+                MessageBox.getLogger().log("channel release");
+            }
+        });
+        RequestInboundEvent event = new RequestInboundEvent(new HttpRequestMessage(request));
+        FloatSphere.getPluginManager().callEvent(event);
+        if(event.isCancel()){
+            ResponseUtil.send403Forbidden(channelHandlerContext);
+            return;
+        }
+        RequestSorter sorter = adaptor.getSorter(request.method().name());
+        ret = sorter.handlerRequest(channelHandlerContext,request);
+        if(ret instanceof RequestUtil.HandlerResultState){
+            /**
+             * 分拣状态结果,返回请求
+             */
+            RequestUtil.HandlerResultState state = (RequestUtil.HandlerResultState) ret;
+            switch (state){
+                case NO_MATCHES:{
+                    RequestUtil.send404State(channelHandlerContext);
+                    MessageBox.getLogger().log("Invalid "+request.method()+" "+request.uri());
+                    break;
+                }
+                case NO_RESULT:{
+                    RequestUtil.send204States(channelHandlerContext);
+                    break;
+
+                }case RUNTIME_ERROR:{
+                    RequestUtil.send500State(channelHandlerContext);
+                    break;
+                }
+                case FORMAT_ERROR:{
+                    RequestUtil.send510State(channelHandlerContext);
+                    break;
+                }
+                case UNSUPPORTED_METHOD:{
+                    RequestUtil.send405State(channelHandlerContext);
+                    MessageBox.getLogger().log("Unsupported Method "+request.method());
+                    break;
+                }
+            }
+        }
+        else if(ret instanceof HttpResponseMessage){
+            /**
+             * 处理请求消息类型的路由执行结果
+             */
+            HttpResponseMessage message = (HttpResponseMessage) ret;
+            message.setMethod(RegisteredRouter.RouteMethod.valueOf(request.method().name()));
+            message.setRoute(request.uri());
+            //写入管道
+            channelHandlerContext.pipeline().write(message);
+        }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        ctx.close();
+        super.channelInactive(ctx);
+    }
+}

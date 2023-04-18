@@ -1,5 +1,7 @@
 package com.chbcraft.internals.components;
 
+import com.chbcraft.internals.base.BaseComponentLoader;
+import com.chbcraft.internals.base.LibrariesClassLoader;
 import com.chbcraft.internals.components.entries.config.Configuration;
 import com.chbcraft.internals.components.enums.ConfigType;
 import com.chbcraft.plugin.BasePlugin;
@@ -12,7 +14,7 @@ public abstract class CustomPlugin extends BasePlugin {
     /**
      *  其类加载器
      */
-    private PluginClassLoader loader;
+    private BaseComponentLoader loader;
     /**
      * 插件的jar中的plugin.yml配置文件对象
      */
@@ -40,6 +42,8 @@ public abstract class CustomPlugin extends BasePlugin {
         if(loader instanceof PluginClassLoader){
             this.loader = (PluginClassLoader)loader;
             this.loader.initialedPlugin(this);
+        }else if (loader instanceof LibrariesClassLoader){
+            this.loader = (LibrariesClassLoader)loader;
         }
     }
     public void init(Configuration pluginInfoConfig, File dataFolder, MessageBox logger){

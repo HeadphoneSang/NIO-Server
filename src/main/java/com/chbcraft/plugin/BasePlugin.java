@@ -12,6 +12,7 @@ public abstract class BasePlugin implements Plugin {
 
     @Override
     public void disable() {
+        this.onDisable();
         this.isEnable = false;
     }
 

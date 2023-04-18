@@ -9,13 +9,14 @@ import com.chbcraft.internals.components.utils.ConfigurationUtil;
 import com.chbcraft.internals.components.utils.JarInitialUtils;
 import com.chbcraft.plugin.Plugin;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LibrariesClassLoader extends URLClassLoader {
+public class LibrariesClassLoader extends BaseComponentLoader {
     private final File libFile;
     private final ConcurrentHashMap<String, Plugin> allLibs = new ConcurrentHashMap<>();
     public LibrariesClassLoader(URL[] urls, ClassLoader parent) {
@@ -90,6 +91,12 @@ public class LibrariesClassLoader extends URLClassLoader {
         }else
             MessageBox.getLogger().broadcastPluginWarn("插件出错!");
     }
+
+    @Override
+    public void initialedPlugin(Plugin plugin) {
+
+    }
+
     public Collection<String> getLibsName(){
         Collection<String> libsName = new HashSet<>();
         if(!allLibs.isEmpty()){
@@ -99,5 +106,32 @@ public class LibrariesClassLoader extends URLClassLoader {
             }
         }
         return libsName;
+    }
+
+    /**
+     * 删除指定名称的lib
+     * @param plugin 插件
+     */
+    public void disableLib(Plugin plugin){
+        if(plugin==null){
+            MessageBox.getLogger().warnTips("The plugin is not exist!");
+            return;
+        }
+        if(plugin.isEnable()){
+            plugin.disable();
+        }
+        FloatSphere.getPluginManager().unregisterEventListener(plugin);
+        FloatSphere.getPluginManager().unregisterRouter(plugin);
+        this.allLibs.remove(plugin.getName());
+    }
+
+    /**
+     * 注销掉所有的依赖
+     */
+    public void disableAllPlugin(){
+        Collection<Plugin> plugins = allLibs.values();
+        for (Plugin plugin : plugins) {
+            disableLib(plugin);
+        }
     }
 }

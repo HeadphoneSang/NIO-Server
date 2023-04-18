@@ -1,36 +1,53 @@
 package com.chbcraft.main;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.*;
+import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.sysevent.PluginCommandEvent;
-import com.chbcraft.io.event.ChannelEvent;
-import com.chbcraft.io.net.AcceptorLoop;
+import com.chbcraft.net.HttpProcessor;
+import com.chbcraft.net.NioHttpAcceptor;
+import io.netty.util.concurrent.DefaultPromise;
 
-import java.nio.channels.SocketChannel;
 import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        MessageBox log = MessageBox.getLogger();
-        //获得一个插件管理器
+    public static void main(String[] args){
+        /**
+         * 获得框架管理器
+         */
         FloatPluginManager manager = (FloatPluginManager) FloatSphere.getPluginManager();
+        /**
+         * 加载所有的依赖和插件
+         */
         manager.enablePlugins();
 
-        AcceptorLoop acceptor = new AcceptorLoop(null);
-        ExecutorService loop = new ThreadPoolExecutor(10,50,10, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
-//        FloatSphere.getPluginManager().registerEventListener();
-        loop.execute(()->{
+        /**
+         * 启动网络组件
+         */
+        HttpProcessor processor = new HttpProcessor(new NioHttpAcceptor(FloatSphere.getProperties().getInt(SectionName.SERVER_PORT.value())));
+        processor.execute();
+        /**
+         * 启动单独的一个线程去阻塞接受命令行消息
+         */
+        Thread commandThread = new Thread(()->{
             Scanner scanner = new Scanner(System.in);
             while(true){
-            String command = scanner.nextLine();
-            manager.callEvent(new PluginCommandEvent(command));
+                String command = scanner.nextLine();
+                if(command.equalsIgnoreCase("stop"))
+                {
+                    manager.disablePlugins();
+                    DefaultPromise<?> promise = (DefaultPromise<?>) processor.shutdown();
+                    promise.addListener(future -> {
+                        if(future.isSuccess()){
+                            MessageBox.getLogger().log("stop server success");
+                            System.exit(0);
+                        }
+                    });
+                }
+                manager.callEvent(new PluginCommandEvent(command));
             }
         });
-
+        commandThread.start();
     }
 }
 

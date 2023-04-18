@@ -4,6 +4,7 @@ import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.entries.config.Configuration;
 import org.fusesource.jansi.Ansi;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import static org.fusesource.jansi.Ansi.ansi;
@@ -13,6 +14,7 @@ public class MessageBox {
     private boolean isOpen = true;
     private final String messageHeader;
     private final Calendar dateMechain;
+    private SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 消息盒子的构造器
@@ -66,7 +68,7 @@ public class MessageBox {
      * @return 返回处理好的消息
      */
     private String split(String message){
-        return (messageHeader+" "+ dateMechain.getTime() +"]").replace(" ","-")+message;
+        return (messageHeader+" "+ dateFm.format(dateMechain.getTime()) +"]").replace(" ","-")+message;
     }
 
     /**
@@ -103,7 +105,7 @@ public class MessageBox {
      */
     public static MessageBox getLogger(){
         if (logger==null){
-            logger = new MessageBox("CONSOLE");
+            logger = new MessageBox("console");
         }
         return logger;
     }

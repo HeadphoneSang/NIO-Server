@@ -148,7 +148,7 @@ public class FloatSphere {
      * 获得配置文件Configuration内容对象
      * @return 返回Configuration
      */
-    static Configuration getProperties(){
+    public static Configuration getProperties(){
         File file = new File(getRootPath()+"\\config\\config.properties");
         boolean flag;
         Configuration properties = null;

@@ -1,5 +1,12 @@
-#如果配置文件为空:
-##1.消息提示盒子默认开启
-##2.插件的最大上限的默认值是整数的最大值
-##3.插件之间默认可以互相依赖
-##4.插件之间默认可以无视jar包之间的隔离互相访问
+#文件传输思路
+##前端将文件分割成小片段,然后和服务器建立一个Channel,服务器保持这个channel
+##参考:https://www.jianshu.com/p/11de1cb3e9af
+##服务器:
+##http解析器放在最前面,之后的第一个处理器触发channelRead0以后主动的callEvent去触发requestInEvent,
+##然后根据请求的请求地址和类型确定处理方法
+#框架预设
+##加载插件弄个解析处理器管道
+##在路由处理器处理结果返回后,封装成FullHttpResponse并且设置完响应头和体以后触发OutboundResponseEvent,允许监听器在这个切换修改Response的响应头
+##检查是否是keep-alive
+#关于类加载器不同,类不可见的原因
+##https://www.cnblogs.com/cnndevelop/p/12123475.html

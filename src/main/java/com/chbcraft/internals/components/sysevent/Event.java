@@ -33,7 +33,7 @@ public abstract class Event {
      * }
      * @return 返回集合对象
      */
-    public abstract HandlerList getHandler();
+    protected abstract HandlerList getHandler();
     public enum EventState{
         ENABLE,
         CANCELABLE

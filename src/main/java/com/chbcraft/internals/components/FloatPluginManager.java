@@ -5,17 +5,15 @@ import com.chbcraft.internals.base.LibrariesClassLoader;
 import com.chbcraft.internals.components.entries.PluginEntry;
 import com.chbcraft.internals.components.entries.config.Configuration;
 import com.chbcraft.internals.components.enums.SectionName;
-import com.chbcraft.internals.components.listen.Cancelable;
-import com.chbcraft.internals.components.listen.HandlerList;
-import com.chbcraft.internals.components.listen.RegisteredListener;
+import com.chbcraft.internals.components.listen.*;
 import com.chbcraft.internals.components.loader.Loader;
 import com.chbcraft.internals.components.sysevent.Event;
+import com.chbcraft.internals.components.sysevent.ManagerSup;
 import com.chbcraft.internals.components.utils.ConfigurationUtil;
 import com.chbcraft.plugin.Plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -39,8 +37,18 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
      * 消息盒子
      */
     protected final MessageBox logger;
+    /**
+     * 路由表
+     */
+    private static final Map<RegisteredRouter.RouteMethod,Map<String,RegisteredRouter>> routeMap = new HashMap<>();
 
     public LibrariesClassLoader libLoader;
+
+    static{
+        routeMap.put(RegisteredRouter.RouteMethod.GET,new HashMap<>());
+        routeMap.put(RegisteredRouter.RouteMethod.POST,new HashMap<>());
+    }
+
     FloatPluginManager(String path){
         PLUGIN_PATH = FloatSphere.getRootPath()+path;
         processor = PluginProcessor.getInstance();
@@ -75,6 +83,24 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         }
     }
 
+    @Override
+    public void registerRouters(Plugin plugin, Routers routers) {
+        if(!plugin.isEnable()){
+            MessageBox.getLogger().warn(plugin.getName()+"had disable!");
+            return;
+        }
+        Set<RegisteredRouter> registeredRouterSet = processor.createRegisteredRouter(plugin,routers);
+        registeredRouterSet.forEach(router ->{
+            RegisteredRouter res = routeMap.get(router.getMethod()).computeIfAbsent(router.getRoute(),key->{
+                routeMap.get(router.getMethod()).put(router.getRoute(),router);
+                return null;
+            });
+            if(res!=null){
+                logger.warnTips("Route "+res.getPlugin().getName()+":"+res.getRoute()+" conflicts with route "+router.getPlugin().getName()+":"+router.getRoute());
+            }
+        });
+    }
+
     /**
      * 空方法
      * @param listener
@@ -93,6 +119,30 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         if(plugin.isEnable())
             return;
         HandlerList.unregisterAll(plugin);
+    }
+    /**
+     * 注销掉所有此插件注册过的路由
+     * @param plugin 删除的插件
+     */
+    public void unregisterRouter(Plugin plugin){
+        if(plugin.isEnable())
+            return;
+        removeRouteInMap(plugin, RegisteredRouter.RouteMethod.GET);
+        removeRouteInMap(plugin, RegisteredRouter.RouteMethod.POST);
+    }
+
+    /**
+     * 删除路由表中所有这个插件的路由
+     * @param plugin 要删除路由的插件
+     * @param method 路由的方法类型
+     */
+    public void removeRouteInMap(Plugin plugin, RegisteredRouter.RouteMethod method){
+        Iterator<Entry<String,RegisteredRouter>> iterator = routeMap.get(method).entrySet().iterator();
+        while (iterator.hasNext()){
+            RegisteredRouter router = iterator.next().getValue();
+            if(router.getPlugin()==plugin)
+                iterator.remove();
+        }
     }
 
 
@@ -160,10 +210,35 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         return processor.getPluginNumber();
     }
 
+    /**
+     * 尝试注销掉插件
+     * 不能保证百分百注销,所以需要插件自己在onDisable里面释放一些资源
+     * @param pluginName 要注销的插件
+     */
     @Override
     public void disablePlugin(String pluginName) {
         processor.disablePlugin(((PluginProcessor)this.processor).getPlugin(pluginName));
         System.gc();
+    }
+
+    /**
+     * 尝试注销所有的插件
+     * 不能保证百分百注销,但是会唤醒所有的onDisable,让插件处理要处理的数据
+     */
+    @Override
+    public void disablePlugins() {
+        for (String name : getPluginList()) {
+            processor.disablePlugin(((PluginProcessor)this.processor).getPlugin(name));
+        }
+        libLoader.disableAllPlugin();
+        try {
+            libLoader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            System.gc();
+        }
     }
 
     /**
@@ -272,5 +347,39 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
                 listener.callEvent(event);
             }
         }
+    }
+
+    /**
+     * 返回路由对应的路由器
+     * @param method 路由的方法类型
+     * @param route 路由的地址
+     * @param mLength 路由方法的参数长度
+     * @return 返回路由处理器
+     */
+    @Override
+    public RegisteredRouter getRouter(String method, String route,int length,int mLength) {
+        RegisteredRouter ret = null;
+        Map<String,RegisteredRouter> map = routeMap.get(RegisteredRouter.RouteMethod.valueOf(method));
+        ret = map.get(route);
+        if(ret==null)
+            return null;
+        if(ret.getMethod()== RegisteredRouter.RouteMethod.POST)
+            return ret;
+        if(mLength==-1){
+            /**
+             * 两种可能:
+             * 1。一个无参的普通的GET请求
+             * 2。一个带有length参数的REST请求
+             */
+
+            if(ret.getParamLength()!=length||ret.getMethodParamsLength()!=0)
+                ret = null;
+        }else{
+            if(ret.hasTags(MapParam.class)&&length==0)
+                return ret;
+            if(ret==null||ret.getMethodParamsLength()!=mLength)
+                ret = null;
+        }
+        return ret;
     }
 }
