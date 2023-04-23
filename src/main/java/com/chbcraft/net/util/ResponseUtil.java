@@ -15,6 +15,7 @@ public class ResponseUtil {
         headers.set(HttpHeaderNames.CONTENT_LENGTH,length);
         headers.set(HttpHeaderNames.CONTENT_TYPE,"application/json; charset=utf-8");
         headers.set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        headers.set(HttpHeaderNames.ACCESS_CONTROL_MAX_AGE,"2592000");
     }
 
     /**

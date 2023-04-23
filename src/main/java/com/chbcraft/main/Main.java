@@ -1,4 +1,5 @@
 package com.chbcraft.main;
+import com.chbcraft.internals.base.CommandLiner;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.*;
 import com.chbcraft.internals.components.enums.SectionName;
@@ -29,25 +30,7 @@ public class Main {
         /**
          * 启动单独的一个线程去阻塞接受命令行消息
          */
-        Thread commandThread = new Thread(()->{
-            Scanner scanner = new Scanner(System.in);
-            while(true){
-                String command = scanner.nextLine();
-                if(command.equalsIgnoreCase("stop"))
-                {
-                    manager.disablePlugins();
-                    DefaultPromise<?> promise = (DefaultPromise<?>) processor.shutdown();
-                    promise.addListener(future -> {
-                        if(future.isSuccess()){
-                            MessageBox.getLogger().log("stop server success");
-                            System.exit(0);
-                        }
-                    });
-                }
-                manager.callEvent(new PluginCommandEvent(command));
-            }
-        });
-        commandThread.start();
+        new CommandLiner(processor).start();
     }
 }
 

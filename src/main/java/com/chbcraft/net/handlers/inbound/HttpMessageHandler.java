@@ -4,10 +4,7 @@ import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.listen.RegisteredRouter;
 import com.chbcraft.internals.components.sysevent.net.RequestInboundEvent;
-import com.chbcraft.net.handlers.router.GetRequestSorter;
-import com.chbcraft.net.handlers.router.PostRequestSorter;
-import com.chbcraft.net.handlers.router.RequestSorter;
-import com.chbcraft.net.handlers.router.RouterAdaptor;
+import com.chbcraft.net.handlers.router.*;
 import com.chbcraft.net.handlers.outbound.HttpResponseMessage;
 import com.chbcraft.net.util.RequestUtil;
 import com.chbcraft.net.util.ResponseUtil;
@@ -26,7 +23,8 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
     static {
         adaptor
                 .addSorter(RegisteredRouter.RouteMethod.POST.name(), new PostRequestSorter())
-                .addSorter(RegisteredRouter.RouteMethod.GET.name(), new GetRequestSorter());
+                .addSorter(RegisteredRouter.RouteMethod.GET.name(), new GetRequestSorter())
+                .addSorter(RegisteredRouter.RouteMethod.OPTIONS.name(), new OptionRequestSorter());
     }
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -36,11 +34,6 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest request) throws Exception {
         Object ret;
-        channelHandlerContext.channel().closeFuture().addListener(future -> {
-            if(future.isSuccess()){
-                MessageBox.getLogger().log("channel release");
-            }
-        });
         RequestInboundEvent event = new RequestInboundEvent(new HttpRequestMessage(request));
         FloatSphere.getPluginManager().callEvent(event);
         if(event.isCancel()){
@@ -75,6 +68,10 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
                 case UNSUPPORTED_METHOD:{
                     RequestUtil.send405State(channelHandlerContext);
                     MessageBox.getLogger().log("Unsupported Method "+request.method());
+                    break;
+                }
+                case OPTIONS_REQUEST:{
+                    RequestUtil.sendOptionsResponse(channelHandlerContext);
                     break;
                 }
             }

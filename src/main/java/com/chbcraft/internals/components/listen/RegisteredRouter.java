@@ -157,6 +157,7 @@ public class RegisteredRouter {
 
     public enum RouteMethod {
         GET("GET"),
+        OPTIONS("OPTIONS"),
         POST("POST");
         private final String typeValue;
         private RouteMethod(String value){

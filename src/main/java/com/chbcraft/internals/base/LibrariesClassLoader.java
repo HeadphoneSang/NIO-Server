@@ -66,7 +66,7 @@ public class LibrariesClassLoader extends BaseComponentLoader {
                 if(clazz!=null){
                     try {
                         Plugin main = clazz.newInstance();
-                        initialedPlugin(main,pluginYml);
+                        initialedPlugin(main,pluginYml,jarFile.getName());
                         this.allLibs.put(name,main);
                         main.onEnable();
                     } catch (InstantiationException | IllegalAccessException e) {
@@ -76,17 +76,23 @@ public class LibrariesClassLoader extends BaseComponentLoader {
             }
         }
     }
+
+    @Override
+    public void initialedPlugin(Plugin plugin, Configuration pluginDescription) {
+
+    }
+
     /**
      * 反向注入属性
      * @param plugin 注入的插件
      */
-    synchronized public void initialedPlugin(Plugin plugin,Configuration pluginDescription) throws NoClassDefFoundError{
+    synchronized public void initialedPlugin(Plugin plugin,Configuration pluginDescription,String jarName) throws NoClassDefFoundError{
         if(plugin != null&&pluginDescription!=null){
             File dataFolder = new File(this.libFile,pluginDescription.getString("name"));
             MessageBox logger = new MessageBox(pluginDescription.getString("name"));
             if(plugin instanceof CustomPlugin){
                 CustomPlugin customPlugin = (CustomPlugin)plugin;
-                customPlugin.init(pluginDescription, dataFolder,logger);
+                customPlugin.initLib(pluginDescription, dataFolder,logger,jarName);
             }
         }else
             MessageBox.getLogger().broadcastPluginWarn("插件出错!");

@@ -6,7 +6,7 @@ public class PluginCommandEvent extends PluginEvent {
     private final String command;
     private String[] args ;
     private static final HandlerList handlerList = new HandlerList();
-    public PluginCommandEvent(String command){
+    public PluginCommandEvent(String command) throws ArrayIndexOutOfBoundsException{
         String[] temp = command.split(" ");
         int length = temp.length;
         this.command = temp[0];

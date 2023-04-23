@@ -15,7 +15,9 @@ public interface PluginManager extends AbstractManager{
     void disablePlugin(String pluginName);
     void loadPlugin(String pluginName) throws Exception;
     void registerEventListener(Plugin plugin, Listener listener);
+    void registerEventListener(Plugin plugin, Listener...listener);
     void registerRouters(Plugin plugin, Routers routers);
+    void registerRouters(Plugin plugin,Routers...routers);
     List<String> getPluginList();
     void noticeDis(String name);
     /**

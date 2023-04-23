@@ -62,11 +62,13 @@ public class PostRequestSorter extends RequestSorter{
             }
             return ret;
         } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
             return RequestUtil.HandlerResultState.RUNTIME_ERROR;
             /**
              * 返回错误
              */
         }catch (IllegalArgumentException e){
+            e.printStackTrace();
             return RequestUtil.HandlerResultState.FORMAT_ERROR;
         }
     }

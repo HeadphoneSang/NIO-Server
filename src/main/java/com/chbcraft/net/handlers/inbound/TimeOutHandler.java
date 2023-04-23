@@ -14,10 +14,10 @@ public class TimeOutHandler extends ChannelDuplexHandler {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         IdleStateEvent e = (IdleStateEvent) evt;
         if (e.state() == IdleState.READER_IDLE) {
-            MessageBox.getLogger().log("close channel");
+//            MessageBox.getLogger().log("close channel");
             ctx.close();
         } else if (e.state() == IdleState.WRITER_IDLE) {
-            MessageBox.getLogger().log("close channel");
+//            MessageBox.getLogger().log("close channel");
             ctx.close();
         }
     }

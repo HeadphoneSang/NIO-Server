@@ -13,7 +13,6 @@ public class MessageBox {
     private volatile static MessageBox logger = null;
     private boolean isOpen = true;
     private final String messageHeader;
-    private final Calendar dateMechain;
     private SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
@@ -24,7 +23,6 @@ public class MessageBox {
         if(messageHeader.equals(""))
             messageHeader = "[Console";
         this.messageHeader = "["+messageHeader;
-        dateMechain = Calendar.getInstance();
         Configuration prop = null;
         prop = FloatSphere.createProperties();
         if(prop!=null)
@@ -68,7 +66,7 @@ public class MessageBox {
      * @return 返回处理好的消息
      */
     private String split(String message){
-        return (messageHeader+" "+ dateFm.format(dateMechain.getTime()) +"]").replace(" ","-")+message;
+        return (messageHeader+" "+ dateFm.format(System.currentTimeMillis()) +"]").replace(" ","-")+message;
     }
 
     /**

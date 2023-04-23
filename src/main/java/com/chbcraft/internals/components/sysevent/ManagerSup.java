@@ -1,6 +1,7 @@
 package com.chbcraft.internals.components.sysevent;
 
 import com.chbcraft.internals.components.MessageBox;
+import com.chbcraft.internals.components.PluginManager;
 import com.chbcraft.internals.components.listen.Cancelable;
 import com.chbcraft.internals.components.listen.HandlerList;
 import com.chbcraft.internals.components.listen.RegisteredListener;

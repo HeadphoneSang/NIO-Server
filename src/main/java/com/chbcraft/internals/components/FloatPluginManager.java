@@ -67,6 +67,12 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         if(enableReplaceSys)
             System.setErr(new ExceptionPrinter(System.out));
     }
+
+    /**
+     * 注册单个事件监听器
+     * @param plugin 注册的插件
+     * @param listener 注册的监听器
+     */
     @Override
     public void registerEventListener(Plugin plugin, Listener listener) {
         if(!plugin.isEnable()){
@@ -83,6 +89,23 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         }
     }
 
+    /**
+     * 注册多个监听器
+     * @param plugin 要注册的插件
+     * @param listener 注册的监听器列表
+     */
+    @Override
+    public void registerEventListener(Plugin plugin, Listener... listener) {
+        for (Listener listener1 : listener) {
+            registerEventListener(plugin,listener1);
+        }
+    }
+
+    /**
+     * 注册单个Routers
+     * @param plugin 注册的插件
+     * @param routers 要注册的routers
+     */
     @Override
     public void registerRouters(Plugin plugin, Routers routers) {
         if(!plugin.isEnable()){
@@ -99,6 +122,18 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
                 logger.warnTips("Route "+res.getPlugin().getName()+":"+res.getRoute()+" conflicts with route "+router.getPlugin().getName()+":"+router.getRoute());
             }
         });
+    }
+
+    /**
+     * 注册多个routers
+     * @param plugin 要注册的插件
+     * @param routers 注册的多个routers
+     */
+    @Override
+    public void registerRouters(Plugin plugin, Routers... routers) {
+        for (Routers router : routers) {
+            registerRouters(plugin,router);
+        }
     }
 
     /**
@@ -145,7 +180,9 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         }
     }
 
-
+    /**
+     * 插件加载器的窗口,使用此api加载插件即可
+     */
     @Override
     public void enablePlugins() {
         if(libLoader==null){
@@ -264,6 +301,10 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         }
     }
 
+    /**
+     * 获得所有的插件的插件名称列表
+     * @return 返回名称列表
+     */
     @Override
     public List<String> getPluginList() {
         List<String> strList = null;
@@ -274,7 +315,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
 
     @Override
     public void noticeDis(String name) {
-        disablePlugins.add(name);
+//        disablePlugins.add(name);
     }
 
     /**

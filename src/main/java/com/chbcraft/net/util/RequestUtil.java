@@ -90,6 +90,17 @@ public class RequestUtil {
     }
 
     /**
+     * 返回405 不支持的请求方式
+     * @param ctx 上下文
+     */
+    public static void sendOptionsResponse(ChannelHandlerContext ctx){
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+        ResponseUtil.setDefaultHeaders(response.headers(),0);
+        response.headers().set(HttpHeaderNames.ALLOW,"OPTIONS, GET, POST");
+        ctx.writeAndFlush(response);
+    }
+
+    /**
      * 返回状态码204,表示没有处理的内容要返回
      * @param ctx 请求连接对话
      */
@@ -148,7 +159,7 @@ public class RequestUtil {
         return ret;
     }
     public enum HandlerResultState{
-
+        OPTIONS_REQUEST("OPTIONS_REQUEST"),
         UNSUPPORTED_METHOD("UNSUPPORTED_METHOD"),
         FORMAT_ERROR("FORMAT_ERROR"),
         RUNTIME_ERROR("RUNTIME_ERROR"),

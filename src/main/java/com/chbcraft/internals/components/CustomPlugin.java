@@ -4,11 +4,15 @@ import com.chbcraft.internals.base.BaseComponentLoader;
 import com.chbcraft.internals.base.LibrariesClassLoader;
 import com.chbcraft.internals.components.entries.config.Configuration;
 import com.chbcraft.internals.components.enums.ConfigType;
+import com.chbcraft.internals.components.utils.JarInitialUtils;
 import com.chbcraft.plugin.BasePlugin;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 public abstract class CustomPlugin extends BasePlugin {
     /**
@@ -35,6 +39,8 @@ public abstract class CustomPlugin extends BasePlugin {
      * 消息输出盒子
      */
     private MessageBox logger;
+
+    private String jarName;
     public abstract void onEnable();
 
     public CustomPlugin(){
@@ -48,6 +54,13 @@ public abstract class CustomPlugin extends BasePlugin {
     }
     public void init(Configuration pluginInfoConfig, File dataFolder, MessageBox logger){
         this.dataFolder = dataFolder;
+        this.pluginDescriptions = pluginInfoConfig;
+        config = new File(dataFolder,"config.yml");
+        this.logger = logger;
+    }
+    public void initLib(Configuration pluginInfoConfig, File dataFolder, MessageBox logger,String jarName){
+        this.dataFolder = dataFolder;
+        this.jarName = jarName;
         this.pluginDescriptions = pluginInfoConfig;
         config = new File(dataFolder,"config.yml");
         this.logger = logger;
@@ -75,13 +88,20 @@ public abstract class CustomPlugin extends BasePlugin {
     @Override
     public InputStream getDefaultResource(String fileName) throws IOException {
         InputStream inputStream = null;
-        URL url = this.loader.getResource(fileName);
-        if(url!=null){
-            String info = url.getUserInfo();
-            URLConnection connection = url.openConnection();
-            connection.setDefaultUseCaches(false);
-            inputStream = connection.getInputStream();
+        if(loader instanceof LibrariesClassLoader){
+            JarFile file = new JarFile(new File(dataFolder.getParent(),jarName));
+            ZipEntry entry = file.getEntry("config.yml");
+            inputStream = file.getInputStream(entry);
+        }else{
+            URL url = this.loader.getResource(fileName);
+            if(url!=null){
+                String info = url.getUserInfo();
+                URLConnection connection = url.openConnection();
+                connection.setDefaultUseCaches(false);
+                inputStream = connection.getInputStream();
+            }
         }
+
         return inputStream;
     }
 

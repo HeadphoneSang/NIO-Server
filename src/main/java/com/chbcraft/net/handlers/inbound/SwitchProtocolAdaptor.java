@@ -43,7 +43,7 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
                 isOk = RequestUtil.send100StateContinue(ctx);
             }
             if(isOk){
-                request.setUri(RequestUtil.decodeUrl(request));
+//                request.setUri(RequestUtil.decodeUrl(request));
                 request.retain();
                 if(ctx.pipeline().get("http") instanceof SimpleChannelInboundHandler)
                     ((SimpleChannelInboundHandler<?>)ctx.pipeline().get("http")).channelRead(ctx,request);
