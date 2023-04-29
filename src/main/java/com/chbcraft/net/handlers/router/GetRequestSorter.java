@@ -38,7 +38,6 @@ public class GetRequestSorter extends RequestSorter{
         {
             reqPath = retain;
             paramsMap = null;
-            paramStr = null;
         }
         LinkedList<String> pathParamsStack = null;
         if(router == null)//解析成REST风格去匹配

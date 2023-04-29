@@ -33,6 +33,10 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest request) throws Exception {
+        if(request.uri().startsWith("/download")&&request.method()==HttpMethod.GET){
+            channelHandlerContext.fireChannelRead(request.retain());
+            return;
+        }
         Object ret;
         RequestInboundEvent event = new RequestInboundEvent(new HttpRequestMessage(request));
         FloatSphere.getPluginManager().callEvent(event);

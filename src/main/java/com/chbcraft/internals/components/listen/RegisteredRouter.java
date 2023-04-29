@@ -1,7 +1,9 @@
 package com.chbcraft.internals.components.listen;
 
-import com.alibaba.fastjson.JSON;
+import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.Routers;
+import com.chbcraft.net.handlers.inbound.websocket.event.RouterAfterExecuteEvent;
+import com.chbcraft.net.handlers.inbound.websocket.event.RouterBeforeExecuteEvent;
 import com.chbcraft.plugin.Plugin;
 
 import java.lang.annotation.Annotation;
@@ -93,11 +95,17 @@ public class RegisteredRouter {
      * @return 返回方法执行后的返回值
      */
     public Object execute(Object[] params) throws InvocationTargetException, IllegalAccessException {
+        Object ret = null;
+        RouterExecutorInfo info = new RouterExecutorInfo(params);
+        FloatSphere.getPluginManager().callEvent(new RouterBeforeExecuteEvent(info));
         if(params==null){
-            return handlerMethod.invoke(routers);
+            ret = handlerMethod.invoke(routers);
         }
-        return handlerMethod.invoke(routers,params);
-
+        ret = handlerMethod.invoke(routers,params);
+        info.clearParams();
+        info.setResult(ret);
+        FloatSphere.getPluginManager().callEvent(new RouterAfterExecuteEvent(info));
+        return ret;
     }
     public Plugin getPlugin() {
         return plugin;
@@ -182,5 +190,47 @@ public class RegisteredRouter {
 
     public void setIndexMap(int[] indexMap) {
         this.indexMap = indexMap;
+    }
+
+    public class RouterExecutorInfo {
+
+        private Object[] params;
+
+        private Object result;
+
+        private RouterExecutorInfo(Object[] params){
+            this.params = params;
+        }
+
+        /**
+         * 查看当前执行路由的路由器是否含有某个标签
+         * @param clazz 标签的Class类
+         * @return 返回是否含有
+         */
+        public boolean hasTags(Class<? extends Annotation> clazz){
+            return RegisteredRouter.this.hasTags(clazz);
+        }
+
+        public Object[] getParams(){
+            return params;
+        }
+
+        protected void clearParams(){
+            this.params = null;
+        }
+
+        public Object getRouterResult(){
+            return this.result;
+        }
+
+        public Object updateRouterResult(Object o){
+            Object old = this.result;
+            this.result = o;
+            return old;
+        }
+
+        private void setResult(Object result){
+            this.result = result;
+        }
     }
 }

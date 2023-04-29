@@ -1,0 +1,4 @@
+url: "jdbc:mysql://localhost:3306/filedb?useSSL=false"
+driver: "com.mysql.jdbc.Driver"
+username: "root"
+password: "123456"

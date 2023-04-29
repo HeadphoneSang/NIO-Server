@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.util.AttributeKey;
 
 import java.net.URLDecoder;
 
@@ -18,7 +19,7 @@ import java.net.URLDecoder;
  */
 @ChannelHandler.Sharable
 public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpRequest> {
-    private final String isWebSocket = "ws";
+    private final String isWebSocket = FloatSphere.getProperties().getString(SectionName.WS_URL.value());
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead(ctx, msg);
@@ -36,14 +37,19 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
 
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         if(request.uri().equalsIgnoreCase(isWebSocket)){//传给WebSocket处理器
-
+            ctx.pipeline().remove("messageDeliver");
+            ctx.pipeline().remove("idleStateHandler");
+            ctx.pipeline().remove("timeoutHandler");
+            ctx.pipeline().remove("adaptor");
+            ctx.pipeline().remove("http");
+            ctx.pipeline().remove("downloadHandler");
+            ctx.fireChannelRead(request.retain());
         }else{
             boolean isOk = true;
             if(HttpHeaders.is100ContinueExpected(request)){
                 isOk = RequestUtil.send100StateContinue(ctx);
             }
             if(isOk){
-//                request.setUri(RequestUtil.decodeUrl(request));
                 request.retain();
                 if(ctx.pipeline().get("http") instanceof SimpleChannelInboundHandler)
                     ((SimpleChannelInboundHandler<?>)ctx.pipeline().get("http")).channelRead(ctx,request);

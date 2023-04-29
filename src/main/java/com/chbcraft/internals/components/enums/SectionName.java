@@ -2,6 +2,10 @@ package com.chbcraft.internals.components.enums;
 
 public enum SectionName {
     /**
+     * Websocket请求升级的url
+     */
+    WS_URL("ws-url"),
+    /**
      * 请求超时时间
      */
     TIME_OUT("timeout"),
