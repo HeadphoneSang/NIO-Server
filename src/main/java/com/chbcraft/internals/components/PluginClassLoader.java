@@ -193,6 +193,7 @@ public class PluginClassLoader extends BaseComponentLoader {
         try {
             return this.findClass(name,this.enableCrossDomain,this.enableDepend);
         } catch (IOException | IllegalAccessException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -222,7 +223,7 @@ public class PluginClassLoader extends BaseComponentLoader {
                     ClassLoader loader = processor.getClassLoaderByPluginName(pluginName);
                     if(loader instanceof PluginClassLoader) {
                         try {
-                            result = ((PluginClassLoader)loader).findClass(name);
+                            result = ((PluginClassLoader)loader).findClass(name,false,false);
                         } catch (ClassNotFoundException e) {
                             throw e;
                         }
@@ -301,7 +302,7 @@ public class PluginClassLoader extends BaseComponentLoader {
         if(plugin != null&&pluginDescription!=null){
             if(plugin instanceof CustomPlugin){
                 CustomPlugin customPlugin = (CustomPlugin)plugin;
-                customPlugin.init(pluginDescription, dataFolder,this.Logger);
+                customPlugin.initLib(pluginDescription, dataFolder,this.Logger,jarFile.getName());
             }
         }else
             MessageBox.getLogger().broadcastPluginWarn("插件出错!");

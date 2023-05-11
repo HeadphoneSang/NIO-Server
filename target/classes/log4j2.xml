@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <!--自定义一些常量，之后使用${变量名}引用-->
+        <Property name="logFilePath">logs</Property>
+        <Property name="logFileName">log.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{[%d{HH:mm:ss} %level]: [%c] %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=DEFAULT , DEBUG=cyan,TRACE=blue}"/>
+        </Console>
+        <RollingFile name="MyTestLog"
+                     fileName="${logFilePath}/${logFileName}"
+                     append="true"
+                     filePattern="${logFilePath}/${logFileName}.%d{yyyy-MM-dd_HH}.log">
+            <PatternLayout charset="UTF-8">
+                <Pattern>[%d{HH:mm:ss} %level]: [%c] %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- TimeBasedTriggeringPolicy :时间滚动策略,默认0点小时产生新的文件,interval="6" : 自定义文件滚动时间间隔,每隔6小时产生新文件, modulate="true" : 产生文件是否以0点偏移时间,即6点,12点,18点,0点-->
+                <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+                <!-- SizeBasedTriggeringPolicy :文件大小滚动策略-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="all">
+            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="MyTestLog" level="info" />
+        </Root>
+    </Loggers>
+</Configuration>

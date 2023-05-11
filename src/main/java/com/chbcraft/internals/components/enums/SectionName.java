@@ -2,9 +2,17 @@ package com.chbcraft.internals.components.enums;
 
 public enum SectionName {
     /**
+    * 失败重传
+     */
+    RELOAD_TIMES("reload_times"),
+    /**
      * Websocket请求升级的url
      */
     WS_URL("ws-url"),
+    /**
+     * 长连接请求超时事件
+     */
+    LONG_TIME_OUT("long-timeout"),
     /**
      * 请求超时时间
      */

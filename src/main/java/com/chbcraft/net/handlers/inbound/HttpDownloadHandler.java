@@ -2,12 +2,18 @@ package com.chbcraft.net.handlers.inbound;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
+import com.chbcraft.net.handlers.inbound.websocket.BinaryFrameHandler;
+import com.chbcraft.net.handlers.inbound.websocket.TextFrameHandler;
 import com.chbcraft.net.handlers.inbound.websocket.event.FileDownloadCompletedEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
 import com.chbcraft.net.util.CodeUtil;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.timeout.IdleStateHandler;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,10 +44,17 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();
+        ctx.pipeline().remove(IdleStateHandler.class);
+        ctx.pipeline().remove(TimeOutHandler.class);
+        ctx.pipeline().remove(SwitchProtocolAdaptor.class);
+        ctx.pipeline().remove(WebSocketServerProtocolHandler.class);
+        ctx.pipeline().remove(BinaryFrameHandler.class);
+        ctx.pipeline().remove(TextFrameHandler.class);
+        MessageBox.getLogger().log("init download");
+        long start = System.currentTimeMillis();
         if (uri.startsWith("/download") && request.method().equals(HttpMethod.GET)) {
             ctx.pipeline().remove("http");
             int end = uri.lastIndexOf("/");
-
             if(end==0){
                 RequestUtil.send405State(ctx);
                 return;
@@ -71,12 +84,12 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
                     @Override
                     public void operationComplete(ChannelProgressiveFuture future)
                             throws Exception {
-//                        log.log("file "+file.getName()+" transfer complete.");
                         raf.close();
                         FileInfo info = new FileInfo();
                         info.setFileModifier(modifier);
                         info.setUsername(finalUsername);
                         info.setFileName(file.getName());
+                        MessageBox.getLogger().log("download spend : "+(System.currentTimeMillis()-start) +"ms");
                         FileDownloadCompletedEvent event = new FileDownloadCompletedEvent(info);
                         FloatSphere.getPluginManager().callEvent(event);
                         if(event.isCancel()){

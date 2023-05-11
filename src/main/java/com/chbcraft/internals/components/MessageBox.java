@@ -2,27 +2,22 @@ package com.chbcraft.internals.components;
 
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.entries.config.Configuration;
-import org.fusesource.jansi.Ansi;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import static org.fusesource.jansi.Ansi.ansi;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessageBox {
-    private volatile static MessageBox logger = null;
+    private static MessageBox loggerBox = null;
     private boolean isOpen = true;
-    private final String messageHeader;
-    private SimpleDateFormat dateFm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    private final Logger logger;
+ 
     /**
      * 消息盒子的构造器
      * @param messageHeader 信息头
      */
     public MessageBox(String messageHeader){
         if(messageHeader.equals(""))
-            messageHeader = "[Console";
-        this.messageHeader = "["+messageHeader;
+            messageHeader = "CONSOLE";
+        this.logger = LogManager.getLogger(messageHeader);
         Configuration prop = null;
         prop = FloatSphere.createProperties();
         if(prop!=null)
@@ -33,49 +28,64 @@ public class MessageBox {
      * 广播普通的消息
      * @param message 消息内容
      */
+    @Deprecated
     public void log(String message){
-        System.out.println(split(message));
+        logger.info(message);
+    }
+
+    public void log(String message,Exception e){
+        logger.info(message,e);
+    }
+
+    public void log(String message,Object...params){
+        logger.info(message,params);
     }
 
     /**
      * 广播错误信息
      * @param message 错误消息
      */
+    @Deprecated
     public void error(String message){
-        error(message, Ansi.Color.RED);
+        logger.fatal(message);
     }
-    public void error(String message, Ansi.Color color){
-        System.out.println(ansi().fg(color).a(split(message)).fg(Ansi.Color.DEFAULT));
+
+    public void error(String msg,Object...params){
+        logger.fatal(msg,params);
+    }
+
+    /**
+     * 广播错误信息
+     * @param message 错误消息
+     */
+    public void error(String message,Exception e){
+        logger.fatal(message,e);
     }
 
     /**
      * 广播加载插件时遇到的Exception时的提示
      * @param reason 可能的原因
      */
+    @Deprecated
     public void warn(String reason){
         reason = "Possible error causes:"+"\nCaused by: "+reason;
-        System.out.print(ansi().fg(Ansi.Color.RED).a(reason).fg(Ansi.Color.DEFAULT));
+        logger.error(reason);
     }
-    public void warnTips(String reason){
-        error(reason, Ansi.Color.YELLOW);
+    public void warn(String msg,Object...params){
+        logger.error(msg,params);
     }
-
-    /**
-     * 对消息进行格式化处理
-     * @param message 播放的信息
-     * @return 返回处理好的消息
-     */
-    private String split(String message){
-        return (messageHeader+" "+ dateFm.format(System.currentTimeMillis()) +"]").replace(" ","-")+message;
+    public void warn(String msg,Exception e){
+        logger.error(msg,e);
     }
-
-    /**
-     * 广播插件加载刚开始的消息
-     * @param name 插件的名字
-     */
-    public void broadcastPluginLoading(String name){
-        if(isOpen)
-            log("[PluginLoading]["+name+"] has initializing!");
+    @Deprecated
+    public void warnTips(String msg){
+        logger.warn(msg);
+    }
+    public void warnTips(String msg,Exception e){
+        logger.warn(msg,e);
+    }
+    public void warnTips(String msg,Object...params){
+        logger.warn(msg,params);
     }
 
     /**
@@ -84,7 +94,7 @@ public class MessageBox {
      */
     public void broadcastPluginWarn(String name){
         if(isOpen)
-            error("[PluginLoading]["+name+"] had initialized! failed Loading!");
+            warnTips("[PluginLoading]["+name+"] had initialized! failed Loading!");
     }
 
     /**
@@ -102,9 +112,9 @@ public class MessageBox {
      * @return 返回一个消息盒子
      */
     public static MessageBox getLogger(){
-        if (logger==null){
-            logger = new MessageBox("console");
+        if (loggerBox==null){
+            loggerBox = new MessageBox("CONSOLE");
         }
-        return logger;
+        return loggerBox;
     }
 }

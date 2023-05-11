@@ -50,13 +50,12 @@ public class FloatSphere {
                 }
                 assert file != null;
                 if(file.isFile())//判断当前是jar还是开发模式下
-                    ROOT_PATH = file.getParentFile().getAbsolutePath().endsWith("\\")?file.getParentFile().getAbsolutePath():file.getParentFile().getAbsolutePath()+"\\";
+                    ROOT_PATH = file.getParentFile().getAbsolutePath().endsWith("\\")?file.getParentFile().getAbsolutePath():file.getParentFile().getAbsolutePath()+File.separator;
                 else {
                     try {
                         ROOT_PATH = FloatSphere.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
                     } catch (URISyntaxException e) {
                         String t = FloatSphere.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-                        System.out.println(StandardCharsets.UTF_8.name());
                         try{
                             ROOT_PATH = URLDecoder.decode(t, StandardCharsets.UTF_8.name());
                         } catch (UnsupportedEncodingException unsupportedEncodingException) {
@@ -149,7 +148,7 @@ public class FloatSphere {
      * @return 返回Configuration
      */
     public static Configuration getProperties(){
-        File file = new File(getRootPath()+"\\config\\config.properties");
+        File file = new File(getRootPath()+File.separator+"config"+File.separator+"config.properties");
         boolean flag;
         Configuration properties = null;
         if(file.exists()){
@@ -165,12 +164,11 @@ public class FloatSphere {
             flag = file.getParentFile().mkdirs();
             try {
                 if(flag||file.getParentFile().exists()||file.createNewFile()){
-                    System.out.println(Objects.requireNonNull(FloatSphere.getSelfFile()).getAbsolutePath());
                     JarInitialUtils.readDirectoryFromJarToCd(Objects.requireNonNull(FloatSphere.getSelfFile()),"config",file.getParentFile(),true);
                     if(file.exists())
                         properties = getProperties();
                     else
-                        System.out.println("Can not find a default config.properties in your jar!");
+                        MessageBox.getLogger().warnTips("Can not find a default config.properties in your jar!");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

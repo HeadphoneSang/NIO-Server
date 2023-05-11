@@ -371,22 +371,22 @@ public class PluginProcessor implements Loader {
                 return;
             }
             File dataFolder = new File(file.getParentFile(),pluginEntry.getPluginName());
-            Object depends = pluginDescription.getValueByKey("after");
-            if(depends!=null){
-                if(depends instanceof List){
-                    List<String> dependsName = ConfigurationUtil.castToList(depends);
-                    for(String name:dependsName){
-                        if(allPlugins.get(name)==null)
-                            MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+name+"] is not install or not exist!Please install it");
-                    }
-                }
-                else
-                {
-                    String depend = String.valueOf(depends);
-                    if(allPlugins.get(depend)==null)
-                        MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+depend+"] is not install or not exist!Please install it");
-                }
-            }
+//            Object depends = pluginDescription.getValueByKey("after");
+//            if(depends!=null){
+//                if(depends instanceof List){
+//                    List<String> dependsName = ConfigurationUtil.castToList(depends);
+//                    for(String name:dependsName){
+//                        if(allPlugins.get(name)==null)
+//                            MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+name+"] is not install or not exist!Please install it");
+//                    }
+//                }
+//                else
+//                {
+//                    String depend = String.valueOf(depends);
+//                    if(allPlugins.get(depend)==null)
+//                        MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+depend+"] is not install or not exist!Please install it");
+//                }
+//            }
             //创建每个插件的独立的类加载器
             classLoader = new PluginClassLoader(this,parentLoader,file,dataFolder,pluginDescription,this.enableCrossDomain,this.enableDepend);
             this.allPlugins.put(pluginEntry.getPluginName(), classLoader);
@@ -450,6 +450,7 @@ public class PluginProcessor implements Loader {
         }
     }
 
+    @Deprecated
     @Override
     public List<String> getPluginList() {
         List<String> ret = new ArrayList<>();

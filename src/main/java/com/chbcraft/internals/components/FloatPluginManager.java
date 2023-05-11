@@ -40,7 +40,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
     /**
      * 路由表
      */
-    private static final Map<RegisteredRouter.RouteMethod,Map<String,RegisteredRouter>> routeMap = new HashMap<>();
+    private static final Map<RegisteredRouter.RouteMethod,Map<String,Object>> routeMap = new HashMap<>();
 
     public LibrariesClassLoader libLoader;
 
@@ -114,12 +114,27 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         }
         Set<RegisteredRouter> registeredRouterSet = processor.createRegisteredRouter(plugin,routers);
         registeredRouterSet.forEach(router ->{
-            RegisteredRouter res = routeMap.get(router.getMethod()).computeIfAbsent(router.getRoute(),key->{
+            Object res = routeMap.get(router.getMethod()).computeIfAbsent(router.getRoute(),key->{
                 routeMap.get(router.getMethod()).put(router.getRoute(),router);
                 return null;
             });
             if(res!=null){
-                logger.warnTips("Route "+res.getPlugin().getName()+":"+res.getRoute()+" conflicts with route "+router.getPlugin().getName()+":"+router.getRoute());
+                if(router.isRest()){
+                    if(res instanceof Map){
+                        Map<Integer,RegisteredRouter> map = (Map)res;
+                        if(map.containsKey(router.getParamLength())){
+                            logger.warnTips("Route "+map.get(router.getParamLength()).getPlugin().getName()+":"+router.getRoute()+" conflicts with route "+router.getPlugin().getName()+":"+router.getRoute());
+                        }else
+                            map.put(router.getParamLength(),router);
+                    }else{
+                        RegisteredRouter first = (RegisteredRouter) res;
+                        Map<Integer,RegisteredRouter> routerSubMap = new HashMap<>();
+                        routerSubMap.put(first.getParamLength(),first);
+                        routerSubMap.put(router.getParamLength(),router);
+                        routeMap.get(router.getMethod()).put(router.getRoute(),routerSubMap);
+                    }
+                }
+
             }
         });
     }
@@ -162,8 +177,10 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
     public void unregisterRouter(Plugin plugin){
         if(plugin.isEnable())
             return;
-        removeRouteInMap(plugin, RegisteredRouter.RouteMethod.GET);
-        removeRouteInMap(plugin, RegisteredRouter.RouteMethod.POST);
+        for (RegisteredRouter.RouteMethod value : RegisteredRouter.RouteMethod.values()) {
+            removeRouteInMap(plugin, value);
+        }
+
     }
 
     /**
@@ -172,11 +189,24 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
      * @param method 路由的方法类型
      */
     public void removeRouteInMap(Plugin plugin, RegisteredRouter.RouteMethod method){
-        Iterator<Entry<String,RegisteredRouter>> iterator = routeMap.get(method).entrySet().iterator();
+        if(routeMap.get(method)==null)
+            return;
+        Iterator<Entry<String,Object>> iterator = routeMap.get(method).entrySet().iterator();
         while (iterator.hasNext()){
-            RegisteredRouter router = iterator.next().getValue();
-            if(router.getPlugin()==plugin)
-                iterator.remove();
+            Object obj = iterator.next().getValue();
+            if(obj instanceof RegisteredRouter){
+                if(((RegisteredRouter)obj).getPlugin()==plugin)
+                    iterator.remove();
+            }else{
+                Map<Integer,RegisteredRouter> subMap = (Map)obj;
+                Iterator<Entry<Integer,RegisteredRouter>> iterator1 = subMap.entrySet().iterator();
+                while(iterator1.hasNext()){
+                    RegisteredRouter router = iterator1.next().getValue();
+                    if(router.getPlugin()==plugin)
+                        iterator1.remove();
+                }
+            }
+
         }
     }
 
@@ -201,7 +231,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         long start = System.currentTimeMillis();
         int number = 0;
         number = loadPlugins();
-        logger.log("Complete loads all plugins\nSuccess Loaded "+number+" Plugin Spend "+(System.currentTimeMillis()-start)+"ms");
+        logger.log("Success Loaded "+number+" Plugin Spend "+(System.currentTimeMillis()-start)+"ms");
     }
 
     /**
@@ -220,13 +250,38 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
             flag = file.mkdirs();
         files = file.listFiles(pathname -> pathname.getName().endsWith(".jar"));
         ArrayList<PluginEntry> pluginEntries = new ArrayList<>();
+        Map<String,Object> tags = new HashMap<>();
+        final Object tag = new Object();
         if(files!=null&&flag){
             for (File value : files){
                 try {
-                    pluginEntries.add(FloatSphere.createPluginEntry(value));
+                    PluginEntry entry = FloatSphere.createPluginEntry(value);
+                    pluginEntries.add(entry);
+                    tags.put(entry.getPluginName(),tag);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+            }
+            for (PluginEntry pluginEntry : pluginEntries) {
+                if(pluginEntry.getAfterPlugins()!=null){
+                    pluginEntry.getAfterPlugins().removeIf((item)->{
+                        if(!tags.containsKey(item)){
+                            MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+item+"] is not install or not exist!Please install it");
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+                if(pluginEntry.getBeforePlugins()!=null){
+                    pluginEntry.getBeforePlugins().removeIf((item)->{
+                        if(!tags.containsKey(item)){
+                            MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Before Plugin["+item+"] is not install or not exist.");
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+
             }
             TopologyMachine topologyMachine = FloatSphere.createTopologyMachine();
             topologyMachine.sort(pluginEntries);
@@ -286,6 +341,11 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
     @Override
     public void loadPlugin(String pluginName) throws Exception {
         PluginEntry targetPlugin;
+        if(processor.getClassLoaderByPluginName(pluginName)!=null)
+        {
+            MessageBox.getLogger().warn("plugin:["+pluginName+"]has already loaded!");
+            return;
+        }
         File pluginFile = searchFileByName(pluginName,true);
         if(pluginFile==null){
             MessageBox.getLogger().warn("The plugin "+pluginName+" is not a plugin or can not find!");
@@ -394,33 +454,41 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
      * 返回路由对应的路由器
      * @param method 路由的方法类型
      * @param route 路由的地址
+     * @param length REST参数长度
      * @param mLength 路由方法的参数长度
      * @return 返回路由处理器
      */
     @Override
     public RegisteredRouter getRouter(String method, String route,int length,int mLength) {
         RegisteredRouter ret = null;
-        Map<String,RegisteredRouter> map = routeMap.get(RegisteredRouter.RouteMethod.valueOf(method));
-        ret = map.get(route);
-        if(ret==null)
+        Map<String,Object> map = routeMap.get(RegisteredRouter.RouteMethod.valueOf(method));
+        Object obj;
+        obj = map.get(route);
+        if(obj==null)
             return null;
-        if(ret.getMethod()== RegisteredRouter.RouteMethod.POST)
-            return ret;
-        if(mLength==-1){
-            /**
-             * 两种可能:
-             * 1。一个无参的普通的GET请求
-             * 2。一个带有length参数的REST请求
-             */
-
-            if(ret.getParamLength()!=length||ret.getMethodParamsLength()!=0)
-                ret = null;
+        if(obj instanceof Map){
+            return ((Map<Integer,RegisteredRouter>)obj).get(length);
         }else{
-            if(ret.hasTags(MapParam.class)&&length==0)
+            ret = (RegisteredRouter) obj;
+            if(ret.getMethod()== RegisteredRouter.RouteMethod.POST)
                 return ret;
-            if(ret==null||ret.getMethodParamsLength()!=mLength)
-                ret = null;
+            if(mLength==-1){
+                /**
+                 * 两种可能:
+                 * 1。一个无参的普通的GET请求
+                 * 2。一个带有length参数的REST请求
+                 */
+
+                if(ret.getParamLength()!=length||ret.getMethodParamsLength()!=0)
+                    ret = null;
+            }else{
+                if(ret.hasTags(MapParam.class)&&length==0)
+                    return ret;
+                if(ret.getMethodParamsLength()!=mLength)
+                    ret = null;
+            }
         }
+
         return ret;
     }
 }

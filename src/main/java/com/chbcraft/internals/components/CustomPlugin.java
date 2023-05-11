@@ -10,6 +10,7 @@ import com.chbcraft.plugin.BasePlugin;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -88,19 +89,16 @@ public abstract class CustomPlugin extends BasePlugin {
     @Override
     public InputStream getDefaultResource(String fileName) throws IOException {
         InputStream inputStream = null;
+        File tar = null;
         if(loader instanceof LibrariesClassLoader){
-            JarFile file = new JarFile(new File(dataFolder.getParent(),jarName));
-            ZipEntry entry = file.getEntry("config.yml");
-            inputStream = file.getInputStream(entry);
+            tar = new File(dataFolder.getParent(),jarName);
         }else{
-            URL url = this.loader.getResource(fileName);
-            if(url!=null){
-                String info = url.getUserInfo();
-                URLConnection connection = url.openConnection();
-                connection.setDefaultUseCaches(false);
-                inputStream = connection.getInputStream();
-            }
+            tar = new File(jarName);
         }
+        JarFile file = new JarFile(tar);
+        ZipEntry entry = file.getEntry("config.yml");
+        inputStream = file.getInputStream(entry);
+
 
         return inputStream;
     }

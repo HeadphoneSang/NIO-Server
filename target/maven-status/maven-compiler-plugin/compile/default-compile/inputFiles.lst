@@ -21,6 +21,7 @@ C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\jav
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\listen\RegisteredRouter.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\net\handlers\inbound\websocket\ContinuationInbound.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\entries\NormalEntry.java
+C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\net\handlers\inbound\websocket\LongTimeOutHandler.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\listen\PojoRequest.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\sysevent\PluginEvent.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\listen\MapParam.java

@@ -1,6 +1,5 @@
 package com.chbcraft.internals.base;
 
-import com.chbcraft.internals.components.FloatPluginManager;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.PluginManager;
@@ -38,7 +37,25 @@ public class CommandLiner extends Thread{
                         }
                     });
                 }
+                else if(command.startsWith("install")){
+                    String[] args = command.split(" ");
+                    if(args.length==2){
+                        FloatSphere.getPluginManager().loadPlugin(args[1]);
+                    }else{
+                        MessageBox.getLogger().log("usage:install plugin-name");
+                    }
+                    continue;
+                }else if(command.startsWith("uninstall")){
+                    String[] args = command.split(" ");
+                    if(args.length==2){
+                        FloatSphere.getPluginManager().disablePlugin(args[1]);
+                    }else{
+                        MessageBox.getLogger().log("usage:uninstall plugin-name");
+                    }
+                    continue;
+                }
             }catch (Exception e){
+                e.printStackTrace();
                 continue;
             }
             try{

@@ -47,7 +47,7 @@ public class NioHttpAcceptor extends HttpAcceptor{
         long s = Long.parseLong(FloatSphere.getProperties().getString(SectionName.TIME_OUT.value()));
         this.server.group(loopGroup).
                 channel(NioServerSocketChannel.class).
-                option(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*1024*5,1024*1024*5)).
+                option(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*64,1024*64)).
                 localAddress(new InetSocketAddress(port)).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
@@ -55,13 +55,12 @@ public class NioHttpAcceptor extends HttpAcceptor{
                         .addLast("idleStateHandler",new IdleStateHandler(s,s,s, TimeUnit.SECONDS))
                         .addLast("timeoutHandler",new TimeOutHandler())
                         .addLast(new HttpServerCodec())
-                        .addLast(new HttpObjectAggregator(10*1024*1024))
+                        .addLast(new HttpObjectAggregator(64*1024))
                         .addLast("fileWriterHandler",new ChunkedWriteHandler())
                         .addLast("adaptor",new SwitchProtocolAdaptor())
-                        .addLast("websocket",new WebSocketServerProtocolHandler(FloatSphere.getProperties().getString(SectionName.WS_URL.value()),null,false,1024*1024*5))
+                        .addLast("websocket",new WebSocketServerProtocolHandler(FloatSphere.getProperties().getString(SectionName.WS_URL.value()),null,false,1024*64))
                         .addLast("websocketTextFrame",new TextFrameHandler())
                         .addLast("BinaryFrameHandler",new BinaryFrameHandler())
-                        .addLast("ContinuationHandler",new ContinuationInbound())
                         .addLast("http",new HttpMessageHandler())
                         .addLast("downloadHandler",new HttpDownloadHandler())
                         .addLast("messageDeliver",new ResponseWriterHandler());

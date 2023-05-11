@@ -3,6 +3,7 @@ package com.chbcraft.net.handlers.inbound;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.enums.ConfigType;
 import com.chbcraft.internals.components.enums.SectionName;
+import com.chbcraft.net.handlers.inbound.websocket.LongTimeOutHandler;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -10,9 +11,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 
 import java.net.URLDecoder;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用来分拣http请求
@@ -43,6 +46,9 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
             ctx.pipeline().remove("adaptor");
             ctx.pipeline().remove("http");
             ctx.pipeline().remove("downloadHandler");
+            long time = FloatSphere.getProperties().getInt(SectionName.LONG_TIME_OUT.value());
+            ctx.pipeline().addFirst("idleStateHandler",new IdleStateHandler(time,time,time, TimeUnit.SECONDS))
+                    .addFirst("timeoutHandler",new LongTimeOutHandler());
             ctx.fireChannelRead(request.retain());
         }else{
             boolean isOk = true;
