@@ -11,6 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 
@@ -26,6 +27,7 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead(ctx, msg);
+        ctx.flush();
     }
 
 
@@ -68,5 +70,6 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
+        ctx.flush();
     }
 }

@@ -45,6 +45,7 @@ public class NioHttpAcceptor extends HttpAcceptor{
         this.server = new ServerBootstrap();
         this.loopGroup = new NioEventLoopGroup();
         long s = Long.parseLong(FloatSphere.getProperties().getString(SectionName.TIME_OUT.value()));
+        logger.log(s);
         this.server.group(loopGroup).
                 channel(NioServerSocketChannel.class).
                 option(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*64,1024*64)).
@@ -55,7 +56,7 @@ public class NioHttpAcceptor extends HttpAcceptor{
                         .addLast("idleStateHandler",new IdleStateHandler(s,s,s, TimeUnit.SECONDS))
                         .addLast("timeoutHandler",new TimeOutHandler())
                         .addLast(new HttpServerCodec())
-                        .addLast(new HttpObjectAggregator(64*1024))
+                        .addLast(new HttpObjectAggregator(1024*1024))
                         .addLast("fileWriterHandler",new ChunkedWriteHandler())
                         .addLast("adaptor",new SwitchProtocolAdaptor())
                         .addLast("websocket",new WebSocketServerProtocolHandler(FloatSphere.getProperties().getString(SectionName.WS_URL.value()),null,false,1024*64))

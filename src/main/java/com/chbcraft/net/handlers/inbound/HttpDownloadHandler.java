@@ -33,11 +33,17 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead(ctx,msg);
+        ctx.flush();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        ctx.close();
     }
 
     @Override

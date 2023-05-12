@@ -30,6 +30,12 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead(ctx,msg);
+        ctx.flush();
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
     }
 
     @Override
@@ -95,7 +101,6 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        ctx.close();
         super.channelInactive(ctx);
     }
 }

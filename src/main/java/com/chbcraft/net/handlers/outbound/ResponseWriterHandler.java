@@ -14,15 +14,15 @@ import java.nio.charset.StandardCharsets;
 
 @ChannelHandler.Sharable
 public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
-    @Override
-    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-        super.disconnect(ctx, promise);
-    }
-
-    @Override
-    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-        super.close(ctx, promise);
-    }
+//    @Override
+//    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+//        super.disconnect(ctx, promise);
+//    }
+//
+//    @Override
+//    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+//        super.close(ctx, promise);
+//    }
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -38,6 +38,7 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
             response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.INTERNAL_SERVER_ERROR);
             response.content().writeBytes("500 INTERNAL ERROR".getBytes(StandardCharsets.UTF_8));
             promise.addListener(future -> {
+                System.out.println("close1");
                 if (future.isSuccess())
                     ctx.close();
             });
