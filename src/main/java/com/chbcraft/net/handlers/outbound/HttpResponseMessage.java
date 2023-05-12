@@ -34,7 +34,7 @@ public class HttpResponseMessage {
         this(null,originalBody);
     }
 
-    public void setHeader(String header,String content){
+    public void setHeader(CharSequence header,String content){
         response.headers().set(header,content);
     }
 

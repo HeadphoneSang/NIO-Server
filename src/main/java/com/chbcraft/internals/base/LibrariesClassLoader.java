@@ -69,7 +69,7 @@ public class LibrariesClassLoader extends BaseComponentLoader {
                         initialedPlugin(main,pluginYml,jarFile.getName());
                         this.allLibs.put(name,main);
                         main.onEnable();
-                    } catch (InstantiationException | IllegalAccessException e) {
+                    } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
                 }

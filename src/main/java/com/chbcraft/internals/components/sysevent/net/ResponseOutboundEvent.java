@@ -54,7 +54,7 @@ public class ResponseOutboundEvent extends PluginEvent {
      * @param headerName 响应头的名称
      * @param value 响应头的值
      */
-    public void setHeader(String headerName,String value){
+    public void setHeader(CharSequence headerName,String value){
         message.setHeader(headerName,value);
     }
 

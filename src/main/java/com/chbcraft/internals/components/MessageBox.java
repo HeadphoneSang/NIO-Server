@@ -29,11 +29,13 @@ public class MessageBox {
      * @param message 消息内容
      */
     @Deprecated
-    public void log(String message){
+    public void log(Object message){
         logger.info(message);
     }
 
-    public void log(String message,Exception e){
+    public void log(String message){logger.info(message);}
+
+    public void log(Object message,Exception e){
         logger.info(message,e);
     }
 
@@ -46,8 +48,12 @@ public class MessageBox {
      * @param message 错误消息
      */
     @Deprecated
-    public void error(String message){
+    public void error(Object message){
         logger.fatal(message);
+    }
+
+    public void error(String message){
+        logger.error(message);
     }
 
     public void error(String msg,Object...params){
@@ -58,7 +64,7 @@ public class MessageBox {
      * 广播错误信息
      * @param message 错误消息
      */
-    public void error(String message,Exception e){
+    public void error(Object message,Exception e){
         logger.fatal(message,e);
     }
 
@@ -67,21 +73,25 @@ public class MessageBox {
      * @param reason 可能的原因
      */
     @Deprecated
-    public void warn(String reason){
-        reason = "Possible error causes:"+"\nCaused by: "+reason;
+    public void warn(Object reason){
         logger.error(reason);
     }
     public void warn(String msg,Object...params){
         logger.error(msg,params);
     }
-    public void warn(String msg,Exception e){
+    public void warn(Object msg,Exception e){
         logger.error(msg,e);
     }
-    @Deprecated
+
     public void warnTips(String msg){
         logger.warn(msg);
     }
-    public void warnTips(String msg,Exception e){
+
+    @Deprecated
+    public void warnTips(Object msg){
+        logger.warn(msg);
+    }
+    public void warnTips(Object msg,Exception e){
         logger.warn(msg,e);
     }
     public void warnTips(String msg,Object...params){
@@ -92,7 +102,7 @@ public class MessageBox {
      * 广播插件加载时遇到错误是的提示信息
      * @param name 插件的名字
      */
-    public void broadcastPluginWarn(String name){
+    public void broadcastPluginWarn(Object name){
         if(isOpen)
             warnTips("[PluginLoading]["+name+"] had initialized! failed Loading!");
     }
@@ -102,7 +112,7 @@ public class MessageBox {
      * @param name 插件名称
      * @param start 插件加载开始的时间
      */
-    public void broadcastPlugin(String name,long start){
+    public void broadcastPlugin(Object name,long start){
         if (isOpen)
             log("[PluginLoading]["+name+"] has initialized!"+" Spend "+(System.currentTimeMillis()-start)+"ms");
     }

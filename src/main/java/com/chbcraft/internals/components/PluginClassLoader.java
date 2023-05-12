@@ -144,7 +144,7 @@ public class PluginClassLoader extends BaseComponentLoader {
         try{
             this.plugin.onEnable();
         }
-        catch (NoClassDefFoundError | NullPointerException error){
+        catch (Error | Exception error){
             throw error;
         }
     }

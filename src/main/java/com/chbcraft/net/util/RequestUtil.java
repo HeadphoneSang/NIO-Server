@@ -10,8 +10,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -153,8 +155,11 @@ public class RequestUtil {
      */
     public static HttpResponseMessage createResponseMessage(Object original, RegisteredRouter router){
         HttpResponseMessage ret = new HttpResponseMessage(original);
-        if(router.hasTags(PojoResponse.class)){
-            ret.addTags(PojoResponse.class.getSimpleName());
+        Collection<Class<? extends Annotation>> tags = router.getTags();
+        if(tags==null)
+            return ret;
+        for (Class<? extends Annotation> tag : router.getTags()) {
+            ret.addTags(tag.getSimpleName());
         }
         return ret;
     }

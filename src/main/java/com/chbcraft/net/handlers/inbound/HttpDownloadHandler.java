@@ -10,7 +10,6 @@ import com.chbcraft.net.util.CodeUtil;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 

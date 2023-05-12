@@ -9,6 +9,8 @@ import com.chbcraft.plugin.Plugin;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -126,6 +128,12 @@ public class RegisteredRouter {
     public boolean hasTags(Class<? extends Annotation> tag) {
 
         return tags != null && (tags.get(tag) != null);
+    }
+
+    public Collection<Class<? extends Annotation>> getTags(){
+        if(tags==null)
+            return null;
+        return Collections.unmodifiableCollection(tags.keySet());
     }
 
     public void addTags(Class<? extends Annotation> tag) {

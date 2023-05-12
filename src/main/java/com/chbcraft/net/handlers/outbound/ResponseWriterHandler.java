@@ -42,6 +42,7 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
                     ctx.close();
             });
         }
+        responseMessage.setResponse(response);
         ResponseOutboundEvent event = new ResponseOutboundEvent(responseMessage);
         FloatSphere.getPluginManager().callEvent(event);
         if(event.isCancel()){
@@ -49,7 +50,6 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
             response.content().clear();
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH,0);
         }
-        responseMessage.setResponse(response);
         super.write(ctx, responseMessage.getResponse(), promise);
         super.flush(ctx);
     }

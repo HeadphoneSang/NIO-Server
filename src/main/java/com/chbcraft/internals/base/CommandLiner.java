@@ -26,6 +26,7 @@ public class CommandLiner extends Thread{
             String command;
             try{
                 command = scanner.nextLine();
+                 command = command.trim();
                 if(command.equalsIgnoreCase("stop"))
                 {
                     manager.disablePlugins();

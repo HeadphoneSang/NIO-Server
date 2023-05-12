@@ -293,7 +293,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
                 if(processor.getPluginNumber()>=MAX_PLUGIN)
                     break;
                 loadPlugin(pluginEntry);//根据插件的配置信息加载插件
-            } catch (Exception | NoClassDefFoundError e) {
+            } catch (Exception | Error e) {
                 MessageBox.getLogger().warn("["+pluginEntry.getPluginName()+"] crashed and your plugin could not be loaded!\n");
                 e.printStackTrace();
             }
