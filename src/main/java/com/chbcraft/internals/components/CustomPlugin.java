@@ -96,7 +96,7 @@ public abstract class CustomPlugin extends BasePlugin {
             tar = new File(jarName);
         }
         JarFile file = new JarFile(tar);
-        ZipEntry entry = file.getEntry("config.yml");
+        ZipEntry entry = file.getEntry(fileName);
         inputStream = file.getInputStream(entry);
 
 

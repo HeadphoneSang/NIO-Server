@@ -1,6 +1,1 @@
-url: "jdbc:mysql://localhost:3306/filedb?useSSL=false&useUnicode=yes&characterEncoding=UTF-8"
-driver: "com.mysql.jdbc.Driver"
-username: "root"
-password: "123456"
-ping-before: true
-max-connections: 5
+data-source: com.alibaba.druid.pool.DruidDataSource
