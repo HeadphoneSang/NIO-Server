@@ -2,15 +2,13 @@ package com.chbcraft.net.handlers.inbound;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
-import com.chbcraft.net.handlers.inbound.websocket.BinaryFrameHandler;
-import com.chbcraft.net.handlers.inbound.websocket.TextFrameHandler;
 import com.chbcraft.net.handlers.inbound.websocket.event.FileDownloadCompletedEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
 import com.chbcraft.net.util.CodeUtil;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
 import java.io.File;
@@ -32,6 +30,10 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ctx.pipeline().remove(IdleStateHandler.class);
+        ctx.pipeline().remove(TimeOutHandler.class);
+        ctx.pipeline().remove(SwitchProtocolAdaptor.class);
+        ctx.pipeline().addAfter("aggregator","writerChunk",new ChunkedWriteHandler());
         super.channelRead(ctx,msg);
         ctx.flush();
     }
@@ -49,12 +51,7 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();
-        ctx.pipeline().remove(IdleStateHandler.class);
-        ctx.pipeline().remove(TimeOutHandler.class);
-        ctx.pipeline().remove(SwitchProtocolAdaptor.class);
-        ctx.pipeline().remove(WebSocketServerProtocolHandler.class);
-        ctx.pipeline().remove(BinaryFrameHandler.class);
-        ctx.pipeline().remove(TextFrameHandler.class);
+
         MessageBox.getLogger().log("init download");
         long start = System.currentTimeMillis();
         if (uri.startsWith("/download") && request.method().equals(HttpMethod.GET)) {

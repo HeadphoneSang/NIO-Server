@@ -14,9 +14,17 @@ public abstract class Configuration implements BaseConfig {
     protected Object value;
     protected File originalFile;
     protected Map<String,Section> sections;
-
     protected Configuration(){
         sections = new HashMap<>();
+    }
+    public long getLong(String key){
+        long ret;
+        try{
+            ret = Long.parseLong(getString(key));
+        }catch (NumberFormatException e){
+            ret = -1;
+        }
+        return ret;
     }
     @Override
     public double getDouble(String key) {
@@ -45,7 +53,6 @@ public abstract class Configuration implements BaseConfig {
     @Override
     public boolean getBoolean(String key) {
         String str = getString(key);
-        boolean result;
         return Boolean.parseBoolean(str);
     }
 
@@ -56,7 +63,7 @@ public abstract class Configuration implements BaseConfig {
             obj = getValueByKeys(key);
         }else
             obj = getValueByKey(key);
-        return String.valueOf(obj);
+        return obj==null?null:String.valueOf(obj);
     }
     /**
      * 通过键值获得Section

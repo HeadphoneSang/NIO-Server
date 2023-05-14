@@ -8,17 +8,14 @@ import com.chbcraft.net.handlers.router.*;
 import com.chbcraft.net.handlers.outbound.HttpResponseMessage;
 import com.chbcraft.net.util.RequestUtil;
 import com.chbcraft.net.util.ResponseUtil;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * 接受普通的HTTP请求,根绝类型去匹配路由
  * 然后去执行对应的路由方法,获得返回结果
  */
-@ChannelHandler.Sharable
 public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final RouterAdaptor adaptor = new RouterAdaptor();
     static {
@@ -41,6 +38,7 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest request) throws Exception {
         if(request.uri().startsWith("/download")&&request.method()==HttpMethod.GET){
+            channelHandlerContext.pipeline().addAfter("http","download",new HttpDownloadHandler());
             channelHandlerContext.fireChannelRead(request.retain());
             return;
         }

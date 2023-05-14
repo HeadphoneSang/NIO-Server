@@ -37,12 +37,15 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        MessageBox.getLogger().warnTips("upload task:{} will done","123");
         if(targetFile==null){
-            ctx.channel().close();
+//            ctx.channel().close();
+            MessageBox.getLogger().warnTips("no file");
             return;
         }
         if(targetFile.getName().lastIndexOf(".temp")!=-1){
             System.gc();
+            MessageBox.getLogger().warnTips("has file");
             if(targetFile.delete()){
                 if(ctx.channel().isOpen())
                 try{
@@ -61,12 +64,15 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        MessageBox.getLogger().warnTips("upload end:");
         if(targetFile==null){
+            MessageBox.getLogger().warnTips("upload task:{} completed","123");
             return;
         }
         if(targetFile.getName().lastIndexOf(".temp")!=-1){
             System.gc();
             targetFile.delete();
+            MessageBox.getLogger().warnTips("upload task interrupted");
         }
         super.channelUnregistered(ctx);
     }
@@ -120,13 +126,13 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
                     ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.FILE_BROKEN,null))).sync();
                     System.gc();
                     targetFile.delete();
-                    ctx.channel().close();
+                    ctx.close();
                     return;
                 }
                 FileUploadCompletedEvent event = new FileUploadCompletedEvent(fileInfo);
                 FloatSphere.getPluginManager().callEvent(event);
                 if(event.isCancel()){
-                    ctx.channel().close();
+                    ctx.close();
                     return;
                 }
                 File comFile = new File(targetFile.getAbsolutePath().substring(0,targetFile.getAbsolutePath().lastIndexOf(".temp")));
@@ -141,6 +147,7 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
                     });
                 }
                 MessageBox.getLogger().warn("文件:"+targetFile.getName()+"传输耗时:"+(System.currentTimeMillis()-start)+"ms");
+                ctx.close();
                 return;
             }
             Object[] data = progress(ctx, fileInfo);
