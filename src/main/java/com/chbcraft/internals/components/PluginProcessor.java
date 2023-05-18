@@ -8,6 +8,8 @@ import com.chbcraft.internals.components.listen.*;
 import com.chbcraft.internals.components.loader.Loader;
 import com.chbcraft.internals.components.sysevent.Event;
 import com.chbcraft.internals.components.sysevent.EventExecutor;
+import com.chbcraft.internals.components.sysevent.PluginDisableEvent;
+import com.chbcraft.internals.components.sysevent.PluginLoadedEvent;
 import com.chbcraft.internals.components.utils.ConfigurationUtil;
 import com.chbcraft.internals.components.utils.RegexUtil;
 import com.chbcraft.plugin.Plugin;
@@ -371,24 +373,8 @@ public class PluginProcessor implements Loader {
                 return;
             }
             File dataFolder = new File(file.getParentFile(),pluginEntry.getPluginName());
-//            Object depends = pluginDescription.getValueByKey("after");
-//            if(depends!=null){
-//                if(depends instanceof List){
-//                    List<String> dependsName = ConfigurationUtil.castToList(depends);
-//                    for(String name:dependsName){
-//                        if(allPlugins.get(name)==null)
-//                            MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+name+"] is not install or not exist!Please install it");
-//                    }
-//                }
-//                else
-//                {
-//                    String depend = String.valueOf(depends);
-//                    if(allPlugins.get(depend)==null)
-//                        MessageBox.getLogger().warnTips("["+pluginEntry.getPluginName()+"]Depend Plugin["+depend+"] is not install or not exist!Please install it");
-//                }
-//            }
-            //创建每个插件的独立的类加载器
             classLoader = new PluginClassLoader(this,parentLoader,file,dataFolder,pluginDescription,this.enableCrossDomain,this.enableDepend);
+            FloatSphere.getPluginManager().callEvent(new PluginLoadedEvent(classLoader.getPluginName()));
             this.allPlugins.put(pluginEntry.getPluginName(), classLoader);
         }
     }
@@ -448,6 +434,7 @@ public class PluginProcessor implements Loader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        FloatSphere.getPluginManager().callEvent(new PluginDisableEvent(plugin.getName()));
     }
 
     @Deprecated

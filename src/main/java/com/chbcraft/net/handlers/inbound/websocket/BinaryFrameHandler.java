@@ -16,6 +16,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 
 public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame> {
@@ -37,13 +38,14 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        MessageBox.getLogger().warnTips("upload task:{} will done","123");
+
         if(targetFile==null){
-//            ctx.channel().close();
+            ctx.channel().close();
             MessageBox.getLogger().warnTips("no file");
             return;
         }
         if(targetFile.getName().lastIndexOf(".temp")!=-1){
+            MessageBox.getLogger().warnTips("upload task:{} will done",targetFile.getName());
             System.gc();
             MessageBox.getLogger().warnTips("has file");
             if(targetFile.delete()){
@@ -64,16 +66,16 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        MessageBox.getLogger().warnTips("upload end:");
-        if(targetFile==null){
-            MessageBox.getLogger().warnTips("upload task:{} completed","123");
-            return;
-        }
-        if(targetFile.getName().lastIndexOf(".temp")!=-1){
-            System.gc();
-            targetFile.delete();
-            MessageBox.getLogger().warnTips("upload task interrupted");
-        }
+//        MessageBox.getLogger().warnTips("upload end:");
+//        if(targetFile==null){
+//            MessageBox.getLogger().warnTips("upload task:{} completed","123");
+//            return;
+//        }
+//        if(targetFile.getName().lastIndexOf(".temp")!=-1){
+//            System.gc();
+//            targetFile.delete();
+//            MessageBox.getLogger().warnTips("upload task interrupted");
+//        }
         super.channelUnregistered(ctx);
     }
 
@@ -98,27 +100,11 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
         if(targetFile.exists()||targetFile.createNewFile()){
             int length;
             try (FileOutputStream output = new FileOutputStream(targetFile, true)) {
-                length = msg.content().readableBytes();//可能是这里限制了大小
-                byte[] buf = new byte[length];
-                msg.content().readBytes(buf);
-                output.write(buf, 0, length);
-            }catch (Exception e){
-                if(++times>max){
-                    if(ctx.channel().isOpen()&&ctx.channel().isActive()){
-                        ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.OUT_RELOAD_TIMES,new Object[]{0,size})));
-                        ctx.channel().close();
-                        return;
-                    }
-                }else{
-                    this.size = 0;
-                    this.targetFile = null;
-                    if(ctx.channel().isOpen()&&ctx.channel().isActive()){
-                        ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.RECONNECT,new Object[]{0,size})));
-                        return;
-                    }
-                }
-                ctx.channel().close();
-                return;
+                FileChannel fc = output.getChannel();
+                length = msg.content().readableBytes();
+                fc.force(true);
+                fc.write(msg.content().nioBuffer());
+                fc.close();
             }
             size +=length;
             if(size>=fileInfo.getFileSize()){

@@ -311,7 +311,6 @@ public class PluginClassLoader extends BaseComponentLoader {
     @Override
     protected void finalize() throws Throwable {
         this.Logger.warnTips("unloading!");
-        FloatSphere.getPluginManager().callEvent(new PluginDisableEvent(plugin));
         if(jarFile!=null)
             jarFile.close();
     }

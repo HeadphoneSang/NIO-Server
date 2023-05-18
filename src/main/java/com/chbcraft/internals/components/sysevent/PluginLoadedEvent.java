@@ -3,11 +3,14 @@ package com.chbcraft.internals.components.sysevent;
 import com.chbcraft.internals.components.listen.HandlerList;
 import com.chbcraft.plugin.Plugin;
 
+/**
+ * 插件加载后触发的事件，可以在此处进行一些自动注册等操作
+ */
 public class PluginLoadedEvent extends PluginEvent{
     private static final HandlerList handlerList = new HandlerList();
-    private final Plugin plugin;
-    public PluginLoadedEvent(Plugin plugin){
-        this.plugin = plugin;
+    private final String pluginName;
+    public PluginLoadedEvent(String pluginName){
+        this.pluginName = pluginName;
     }
     @Override
     public HandlerList getHandler() {
@@ -16,7 +19,7 @@ public class PluginLoadedEvent extends PluginEvent{
     public static HandlerList getHandlerList(){
         return handlerList;
     }
-    public Plugin getPlugin(){
-        return this.plugin;
+    public String getPluginName(){
+        return pluginName;
     }
 }

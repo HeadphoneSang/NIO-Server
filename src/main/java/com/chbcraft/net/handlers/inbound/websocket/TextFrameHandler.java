@@ -39,9 +39,9 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
         getFileInfo().setFileName(map.get("fileName"));
         getFileInfo().setFileSize(Long.parseLong(map.get("fileSize")));
         getFileInfo().setUsername(map.get("username"));
-        UploadFIleInfoEvent event = new UploadFIleInfoEvent(getFileInfo());
-        FloatSphere.getPluginManager().callEvent(event);
-        if(event.isCancel()||getFileInfo().getFileModifier()==null||getFileInfo().getFileModifier().equals("")){
+//        UploadFIleInfoEvent event = new UploadFIleInfoEvent(getFileInfo());
+//        FloatSphere.getPluginManager().callEvent(event);
+        if(getFileInfo().getFileModifier()==null||getFileInfo().getFileModifier().equals("")){
             ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.FORBIDDEN_WS,null)));
             MessageBox.getLogger().warn("wrong fileInfo: "+getFileInfo().getFileName()+" channel is closed"+'\n');
             ctx.channel().close().addListener((future)->{

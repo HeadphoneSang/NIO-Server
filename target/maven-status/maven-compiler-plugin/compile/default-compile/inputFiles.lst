@@ -14,6 +14,7 @@ C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\jav
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\entries\ConfigSection.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\exception\DuplicatePluginMainException.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\net\handlers\inbound\websocket\event\FileDownloadCompletedEvent.java
+C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\net\handlers\inbound\websocket\WebSocketFrameHandler.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\listen\Get.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\internals\components\FloatRunnable.java
 C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\src\main\java\com\chbcraft\net\util\CodeUtil.java

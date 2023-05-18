@@ -12,9 +12,6 @@ import io.netty.handler.timeout.IdleStateEvent;
 public class LongTimeOutHandler extends ChannelDuplexHandler {
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if(!(evt instanceof IdleStateEvent)){
-            return;
-        }
         IdleStateEvent e = (IdleStateEvent) evt;
         if (e.state() == IdleState.READER_IDLE) {
             ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).addListener(future -> {
@@ -29,17 +26,9 @@ public class LongTimeOutHandler extends ChannelDuplexHandler {
         }
     }
 
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-
-    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
-    }
-
-    @Override
-    public void deregister(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
     }
 }

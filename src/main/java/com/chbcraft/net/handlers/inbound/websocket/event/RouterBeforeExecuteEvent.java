@@ -6,6 +6,9 @@ import com.chbcraft.internals.components.sysevent.PluginEvent;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * 路由方法执行前出发的事件
+ */
 public class RouterBeforeExecuteEvent extends PluginEvent {
 
     private static final HandlerList handlerList = new HandlerList();

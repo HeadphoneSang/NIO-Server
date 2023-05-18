@@ -1,0 +1,73 @@
+[10:18:41 INFO]: [CONSOLE] Security-IO is not enable...
+[10:18:41 INFO]: [DatabaseLib] service is running
+[10:18:41 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[10:18:41 INFO]: [DatabaseLib] initialized SqlSession success
+[10:18:41 INFO]: [FileMapperLib] has loaded
+[10:18:41 WARN]: [FileMapperLib] can't find a default url in config
+[10:18:41 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[10:18:41 WARN]: [FileMapperLib] can't find a default url in config
+[10:18:41 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[10:18:41 WARN]: [FileMapperLib] can't find a default url in config
+[10:18:41 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[10:18:41 WARN]: [CONSOLE] loaded libs:
+[10:18:41 INFO]: [CONSOLE] FileMapperLib
+[10:18:41 INFO]: [CONSOLE] DatabaseLib
+[10:18:41 INFO]: [NormalRouter] is loading
+[10:18:41 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 84ms
+[10:18:41 INFO]: [APlugin] enable
+[10:18:41 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 4ms
+[10:18:41 INFO]: [CPlugin] enable
+[10:18:41 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 3ms
+[10:18:41 INFO]: [DPlugin] enable
+[10:18:41 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 2ms
+[10:18:41 INFO]: [BPlugin] enable
+[10:18:41 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 3ms
+[10:18:41 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 104ms
+[10:18:41 INFO]: [CONSOLE] server is initializing
+[10:18:42 INFO]: [CONSOLE] server is initialized
+[10:18:42 INFO]: [CONSOLE] launching.....
+[10:18:43 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[10:18:48 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
+[10:18:54 ERROR]: [CONSOLE] wrong fileInfo: `TFSNU$WND5}JZ%[VWC`LX3(1).png channel is closed
+
+[10:18:54 INFO]: [CONSOLE] 403 forbidden connected ws is closed
+[10:18:54 WARN]: [CONSOLE] no file
+[10:19:21 ERROR]: [CONSOLE] 开始上传文件:`TFSNU$WND5}JZ%[VWC`LX3(1).png.temp
+[10:19:21 ERROR]: [CONSOLE] 文件:`TFSNU$WND5}JZ%[VWC`LX3(1).png.temp传输耗时:55ms
+[10:19:21 WARN]: [CONSOLE] upload task:`TFSNU$WND5}JZ%[VWC`LX3(1).png.temp will done
+[10:19:21 WARN]: [CONSOLE] has file
+[10:19:45 ERROR]: [CONSOLE] 开始上传文件:SVID_20210823_222213_1.mp4.temp
+[10:19:52 ERROR]: [CONSOLE] 文件:SVID_20210823_222213_1.mp4.temp传输耗时:6381ms
+[10:19:52 WARN]: [CONSOLE] upload task:SVID_20210823_222213_1.mp4.temp will done
+[10:19:52 WARN]: [CONSOLE] has file
+[10:20:00 INFO]: [CONSOLE] init download
+[10:20:05 INFO]: [CONSOLE] download spend : 4343ms
+[10:23:05 INFO]: [CONSOLE] Security-IO is not enable...
+[10:23:05 INFO]: [DatabaseLib] service is running
+[10:23:05 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[10:23:05 INFO]: [DatabaseLib] initialized SqlSession success
+[10:23:05 INFO]: [FileMapperLib] has loaded
+[10:23:05 WARN]: [FileMapperLib] can't find a default url in config
+[10:23:05 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[10:23:05 WARN]: [FileMapperLib] can't find a default url in config
+[10:23:05 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[10:23:05 WARN]: [FileMapperLib] can't find a default url in config
+[10:23:05 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[10:23:05 WARN]: [CONSOLE] loaded libs:
+[10:23:05 INFO]: [CONSOLE] FileMapperLib
+[10:23:05 INFO]: [CONSOLE] DatabaseLib
+[10:23:05 INFO]: [NormalRouter] is loading
+[10:23:05 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 67ms
+[10:23:05 INFO]: [APlugin] enable
+[10:23:05 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 6ms
+[10:23:05 INFO]: [CPlugin] enable
+[10:23:05 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 2ms
+[10:23:05 INFO]: [DPlugin] enable
+[10:23:05 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 3ms
+[10:23:05 INFO]: [BPlugin] enable
+[10:23:05 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 2ms
+[10:23:05 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 83ms
+[10:23:05 INFO]: [CONSOLE] server is initializing
+[10:23:06 INFO]: [CONSOLE] server is initialized
+[10:23:06 INFO]: [CONSOLE] launching.....
+[10:23:07 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921

@@ -1,0 +1,177 @@
+[19:13:39 INFO]: [CONSOLE] Security-IO is not enable...
+[19:13:40 INFO]: [DatabaseLib] service is running
+[19:13:40 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:13:40 INFO]: [DatabaseLib] initialized SqlSession success
+[19:13:40 INFO]: [FileMapperLib] has loaded
+[19:13:40 WARN]: [FileMapperLib] can't find a default url in config
+[19:13:40 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:13:40 WARN]: [FileMapperLib] can't find a default url in config
+[19:13:40 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:13:40 WARN]: [FileMapperLib] can't find a default url in config
+[19:13:40 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:13:40 WARN]: [CONSOLE] loaded libs:
+[19:13:40 INFO]: [CONSOLE] FileMapperLib
+[19:13:40 INFO]: [CONSOLE] DatabaseLib
+[19:13:40 INFO]: [NormalRouter] is loading
+[19:13:40 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 91ms
+[19:13:40 INFO]: [APlugin] enable
+[19:13:40 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 3ms
+[19:13:40 INFO]: [CPlugin] enable
+[19:13:40 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 2ms
+[19:13:40 INFO]: [DPlugin] enable
+[19:13:40 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 2ms
+[19:13:40 INFO]: [BPlugin] enable
+[19:13:40 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 2ms
+[19:13:40 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 107ms
+[19:13:40 INFO]: [CONSOLE] server is initializing
+[19:13:41 INFO]: [CONSOLE] server is initialized
+[19:13:41 INFO]: [CONSOLE] launching.....
+[19:13:42 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:14:08 INFO]: [CONSOLE] Security-IO is not enable...
+[19:14:08 INFO]: [DatabaseLib] service is running
+[19:14:08 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:14:08 INFO]: [DatabaseLib] initialized SqlSession success
+[19:14:08 INFO]: [FileMapperLib] has loaded
+[19:14:08 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:08 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:14:08 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:08 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:14:08 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:08 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:14:08 WARN]: [CONSOLE] loaded libs:
+[19:14:08 INFO]: [CONSOLE] FileMapperLib
+[19:14:08 INFO]: [CONSOLE] DatabaseLib
+[19:14:08 INFO]: [NormalRouter] is loading
+[19:14:08 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 67ms
+[19:14:08 INFO]: [APlugin] enable
+[19:14:08 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 4ms
+[19:14:08 INFO]: [CPlugin] enable
+[19:14:08 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 2ms
+[19:14:08 INFO]: [DPlugin] enable
+[19:14:08 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 1ms
+[19:14:08 INFO]: [BPlugin] enable
+[19:14:08 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 1ms
+[19:14:08 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 83ms
+[19:14:08 INFO]: [CONSOLE] server is initializing
+[19:14:09 INFO]: [CONSOLE] server is initialized
+[19:14:09 INFO]: [CONSOLE] launching.....
+[19:14:10 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:14:32 INFO]: [CONSOLE] Security-IO is not enable...
+[19:14:32 INFO]: [DatabaseLib] service is running
+[19:14:32 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:14:32 INFO]: [DatabaseLib] initialized SqlSession success
+[19:14:32 INFO]: [FileMapperLib] has loaded
+[19:14:32 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:32 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:14:32 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:32 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:14:32 WARN]: [FileMapperLib] can't find a default url in config
+[19:14:32 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:14:32 WARN]: [CONSOLE] loaded libs:
+[19:14:32 INFO]: [CONSOLE] FileMapperLib
+[19:14:32 INFO]: [CONSOLE] DatabaseLib
+[19:14:32 INFO]: [NormalRouter] is loading
+[19:14:32 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 75ms
+[19:14:32 INFO]: [APlugin] enable
+[19:14:32 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 5ms
+[19:14:32 INFO]: [CPlugin] enable
+[19:14:32 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 1ms
+[19:14:32 INFO]: [DPlugin] enable
+[19:14:32 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 2ms
+[19:14:32 INFO]: [BPlugin] enable
+[19:14:32 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 0ms
+[19:14:32 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 89ms
+[19:14:32 INFO]: [CONSOLE] server is initializing
+[19:14:33 INFO]: [CONSOLE] server is initialized
+[19:14:33 INFO]: [CONSOLE] launching.....
+[19:14:33 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:14:45 INFO]: [CONSOLE] Invalid GET /file/getFileDescByModifier/L3Jvb3Qvc2VydmVyL2xpYnMvRmlsZU1hcHBlckxpYi9maWxlcy8xMjMvV2Vi5bqU55So5bGCIC0g5Ymv5pysLnBuZw%3D%3D
+[19:14:45 INFO]: [CONSOLE] Invalid GET /favicon.ico
+[19:32:49 INFO]: [CONSOLE] Security-IO is not enable...
+[19:32:49 INFO]: [DatabaseLib] service is running
+[19:32:50 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:32:50 INFO]: [DatabaseLib] initialized SqlSession success
+[19:32:50 INFO]: [FileMapperLib] has loaded
+[19:32:50 WARN]: [FileMapperLib] can't find a default url in config
+[19:32:50 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:32:50 WARN]: [FileMapperLib] can't find a default url in config
+[19:32:50 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:32:50 WARN]: [FileMapperLib] can't find a default url in config
+[19:32:50 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:32:50 WARN]: [CONSOLE] loaded libs:
+[19:32:50 INFO]: [CONSOLE] FileMapperLib
+[19:32:50 INFO]: [CONSOLE] DatabaseLib
+[19:32:50 INFO]: [NormalRouter] is loading
+[19:32:50 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 73ms
+[19:32:50 INFO]: [APlugin] enable
+[19:32:50 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 5ms
+[19:32:50 INFO]: [CPlugin] enable
+[19:32:50 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 2ms
+[19:32:50 INFO]: [DPlugin] enable
+[19:32:50 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 2ms
+[19:32:50 INFO]: [BPlugin] enable
+[19:32:50 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 1ms
+[19:32:50 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 91ms
+[19:32:50 INFO]: [CONSOLE] server is initializing
+[19:32:50 INFO]: [CONSOLE] server is initialized
+[19:32:50 INFO]: [CONSOLE] launching.....
+[19:32:51 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:34:15 INFO]: [CONSOLE] Security-IO is not enable...
+[19:34:15 INFO]: [DatabaseLib] service is running
+[19:34:15 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:34:15 INFO]: [DatabaseLib] initialized SqlSession success
+[19:34:15 INFO]: [FileMapperLib] has loaded
+[19:34:15 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:15 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:34:15 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:15 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:34:15 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:15 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:34:15 WARN]: [CONSOLE] loaded libs:
+[19:34:15 INFO]: [CONSOLE] FileMapperLib
+[19:34:15 INFO]: [CONSOLE] DatabaseLib
+[19:34:15 INFO]: [NormalRouter] is loading
+[19:34:16 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 91ms
+[19:34:16 INFO]: [APlugin] enable
+[19:34:16 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 4ms
+[19:34:16 INFO]: [CPlugin] enable
+[19:34:16 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 4ms
+[19:34:16 INFO]: [DPlugin] enable
+[19:34:16 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 3ms
+[19:34:16 INFO]: [BPlugin] enable
+[19:34:16 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 4ms
+[19:34:16 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 112ms
+[19:34:16 INFO]: [CONSOLE] server is initializing
+[19:34:16 INFO]: [CONSOLE] server is initialized
+[19:34:16 INFO]: [CONSOLE] launching.....
+[19:34:17 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:34:31 INFO]: [CONSOLE] Security-IO is not enable...
+[19:34:31 INFO]: [DatabaseLib] service is running
+[19:34:31 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-0} restart
+[19:34:31 INFO]: [DatabaseLib] initialized SqlSession success
+[19:34:31 INFO]: [FileMapperLib] has loaded
+[19:34:31 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:31 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[19:34:31 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:31 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[19:34:31 WARN]: [FileMapperLib] can't find a default url in config
+[19:34:31 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[19:34:31 WARN]: [CONSOLE] loaded libs:
+[19:34:31 INFO]: [CONSOLE] FileMapperLib
+[19:34:31 INFO]: [CONSOLE] DatabaseLib
+[19:34:31 INFO]: [NormalRouter] is loading
+[19:34:32 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 102ms
+[19:34:32 INFO]: [APlugin] enable
+[19:34:32 INFO]: [CONSOLE] [PluginLoading][APlugin] has initialized! Spend 4ms
+[19:34:32 INFO]: [CPlugin] enable
+[19:34:32 INFO]: [CONSOLE] [PluginLoading][CPlugin] has initialized! Spend 4ms
+[19:34:32 INFO]: [DPlugin] enable
+[19:34:32 INFO]: [CONSOLE] [PluginLoading][DPlugin] has initialized! Spend 3ms
+[19:34:32 INFO]: [BPlugin] enable
+[19:34:32 INFO]: [CONSOLE] [PluginLoading][BPlugin] has initialized! Spend 4ms
+[19:34:32 INFO]: [CONSOLE] Success Loaded 5 Plugin Spend 128ms
+[19:34:32 INFO]: [CONSOLE] server is initializing
+[19:34:32 INFO]: [CONSOLE] server is initialized
+[19:34:32 INFO]: [CONSOLE] launching.....
+[19:34:33 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:8921
+[19:35:07 INFO]: [CONSOLE] Invalid GET /home/addComment

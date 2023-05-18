@@ -3,6 +3,7 @@ package com.chbcraft.net.handlers.outbound;
 import com.alibaba.fastjson.JSON;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.sysevent.net.ResponseOutboundEvent;
+import com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor;
 import com.chbcraft.net.util.ResponseUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -53,6 +54,8 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
         }
         super.write(ctx, responseMessage.getResponse(), promise);
         super.flush(ctx);
+        if(!ctx.pipeline().get(SwitchProtocolAdaptor.class).isKeepAlive())
+            ctx.close();
     }
 
     @Override
