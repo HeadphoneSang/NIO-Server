@@ -439,6 +439,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
     private void loadPlugin(PluginEntry entry) throws Exception {
         processor.loadPlugin(entry,libLoader);
     }
+
     protected void fireEvent(Event event,RegisteredListener[] registeredListeners){
         for(RegisteredListener listener : registeredListeners){
             Plugin plugin = listener.getPlugin();

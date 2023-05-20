@@ -30,9 +30,16 @@ public class TranProtocol {
      */
     public static final int KEEP_CONTINUE = 0X03;
     /**
-     * 不可以继续
+     * 取消任务
      */
     public static final int CANCEL_CONTINUE = 0X04;
-
+    /**
+     * 文件大小不一致
+     */
+    public static final int FILE_CHANGED = 0X05;
+    /**
+     * 文件已存在,无需上传
+     */
+    public static final int FILE_EXIST = 0x06;
 
 }

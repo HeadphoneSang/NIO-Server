@@ -4,8 +4,10 @@ import java.io.File;
 
 public class FileInfo {
     private String fileName;
-    private File originalFile;
+    private File tarFile;
+    private File tempFile;
     private long fileSize;
+    private long FileOffSet = 0;
     private String fileModifier;
     private String username;
 
@@ -33,12 +35,20 @@ public class FileInfo {
         this.fileName = fileName;
     }
 
-    public File getOriginalFile() {
-        return originalFile;
+    public File getTarFile() {
+        return tarFile;
     }
 
-    public void setOriginalFile(File originalFile) {
-        this.originalFile = originalFile;
+    public void setTarFile(File tarFile) {
+        this.tarFile = tarFile;
+    }
+
+    public File getTempFile() {
+        return tempFile;
+    }
+
+    public void setTempFile(File tempFile) {
+        this.tempFile = tempFile;
     }
 
     public String getFileModifier() {
@@ -47,5 +57,13 @@ public class FileInfo {
 
     public void setFileModifier(String fileModifier) {
         this.fileModifier = fileModifier;
+    }
+
+    public long getFileOffSet() {
+        return FileOffSet;
+    }
+
+    public void setFileOffSet(long fileOffSet) {
+        FileOffSet = fileOffSet;
     }
 }

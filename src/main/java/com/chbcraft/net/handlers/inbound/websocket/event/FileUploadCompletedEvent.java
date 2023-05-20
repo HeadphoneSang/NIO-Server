@@ -41,11 +41,11 @@ public class FileUploadCompletedEvent extends PluginEvent {
     }
 
     public void setOriginalFile(File file){
-        fileInfo.setOriginalFile(file);
+        fileInfo.setTarFile(file);
     }
 
     public File getFile(){
-        return fileInfo.getOriginalFile();
+        return fileInfo.getTarFile();
     }
     public static HandlerList getHandlerList(){
         return handlerList;
