@@ -98,6 +98,22 @@ public class MessageBox {
         logger.warn(msg,params);
     }
 
+    public void trace(Object msg){
+        logger.trace(msg);
+    }
+
+    public void trace(String msg,Object...params){
+        logger.trace(msg, params);
+    }
+
+    public void debug(Object obj){
+        logger.debug(obj);
+    }
+
+    public void debug(String msg,Object...params){
+        logger.debug(msg,params);
+    }
+
     /**
      * 广播插件加载时遇到错误是的提示信息
      * @param name 插件的名字

@@ -21,10 +21,12 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame msg) throws Exception {
         if(msg instanceof BinaryWebSocketFrame){
             int length = msg.content().readableBytes();
-            if(buff!=null){
-                buff.release();
-                buff = null;
-            }
+//            if(buff!=null){
+//                if(buff.refCnt()>0){
+//                    buff.release();
+//                    buff = null;
+//                }
+//            }
             buff = ctx.alloc().buffer(length);
             buff.writeBytes(msg.content());
             if(msg.isFinalFragment()){

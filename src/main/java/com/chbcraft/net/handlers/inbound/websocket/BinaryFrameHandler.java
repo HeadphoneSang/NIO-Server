@@ -5,6 +5,7 @@ import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.net.handlers.inbound.OperationInbound;
 import com.chbcraft.net.handlers.inbound.websocket.event.FileUploadCompletedEvent;
+import com.chbcraft.net.handlers.inbound.websocket.event.FileUploadInterruptEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.WebFileResult;
 import com.chbcraft.net.handlers.inbound.websocket.utils.ResultUtil;
@@ -28,7 +29,7 @@ import java.nio.file.StandardOpenOption;
 
 
 public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame> {
-
+    private long s;
     /**
      * 目标文件传输后正确的大小
      */
@@ -56,18 +57,18 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         if(fc!=null&&fc.isOpen()){
             fc.close();
-            MessageBox.getLogger().log("连接中断");
+            FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
+            MessageBox.getLogger().warnTips("!Abnormal connection interruption:{}",info.getFileName());
+            FloatSphere.getPluginManager().callEvent(new FileUploadInterruptEvent(CodeUtil.encodeBase64(tempFile.getAbsolutePath()),s,info.getUsername()));
+        }else{
+            if(size>0&&size==start){
+                FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
+                FloatSphere.getPluginManager().callEvent(new FileUploadCompletedEvent(info));
+            }
         }
-        super.channelInactive(ctx);
-    }
-
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-
         super.channelUnregistered(ctx);
     }
 
@@ -80,19 +81,23 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
         if(start==size){//文件完整传输完毕
             fc.close();
             Files.move(tempFile.toPath(),tarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            MessageBox.getLogger().log("end");
+            MessageBox.getLogger().trace("File: {} received spend: {} ms",tarFile.getName(),System.currentTimeMillis()-s);
             FrameUtil.writeFrame(ret,TranProtocol.TASK_COMPLETED,size);
         }else if(start>size){//文件传输不一致
             fc.close();
+            MessageBox.getLogger().warnTips("{}Transmission error? The file format is changed!",tarFile.getName());
             Files.delete(tarFile.toPath());
             FrameUtil.writeFrame(ret, TranProtocol.TASK_FAILED|TranProtocol.FILE_CHANGED,0 );
+
         }else{//传输中
             FrameUtil.writeFrame(ret, TranProtocol.TASK_RUNNING|TranProtocol.CONTINUE_TASK,start);
         }
         if (ctx.channel().isOpen()&&ctx.channel().isActive())//回显数据到对端
-            ctx.writeAndFlush(new TextWebSocketFrame(ret));
-//        else
-//            ctx.close();
+            ctx.writeAndFlush(new TextWebSocketFrame(ret)).addListener((future -> {
+                if(ret.refCnt()>0){
+                    ret.release();
+                }
+            }));
     }
 
     /**
@@ -108,6 +113,9 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
         fc.force(true);
         size = info.getFileSize();
         start = info.getFileOffSet();
+        s = System.currentTimeMillis();
+        info.setFileName(tarFile.getName());
+        info.setFileModifier(CodeUtil.encodeBase64(tarFile.getAbsolutePath()));
     }
 
     /**
@@ -119,15 +127,11 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
         int s = 0;
         try {
             s = msg.content().readBytes(fc,start,msg.content().readableBytes());
+            msg.release();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return s;
-    }
-
-    private Object[] progress(ChannelHandlerContext ctx, FileInfo fileInfo) {
-        float e = (float)size/(float)fileInfo.getFileSize();
-        return new Object[]{e,size};
     }
 
     @Override

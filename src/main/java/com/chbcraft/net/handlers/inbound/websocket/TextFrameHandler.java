@@ -2,6 +2,7 @@ package com.chbcraft.net.handlers.inbound.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.chbcraft.internals.components.FloatSphere;
+import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.net.handlers.inbound.OperationInbound;
 import com.chbcraft.net.handlers.inbound.websocket.event.WebSocketOpenEvent;
 import com.chbcraft.net.tranfer.*;
@@ -23,12 +24,13 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
                 .addFrameHandler(TranProtocol.TASK_CREATING,new TaskCreatingHandler())
                 .addFrameHandler(TranProtocol.TASK_RUNNING,new TaskRunningHandler()
                     .addFrameHandler(TranProtocol.CANCEL_CONTINUE,new CancelTaskHandler())
-                );
+                )
+                .addFrameHandler(TranProtocol.TASK_COMPLETED,new TaskCompletedHandler());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("close");
+
         super.channelInactive(ctx);
     }
 

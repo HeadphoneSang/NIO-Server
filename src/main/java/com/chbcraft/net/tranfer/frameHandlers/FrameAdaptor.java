@@ -24,16 +24,16 @@ public abstract class FrameAdaptor implements FrameHandler{
 
     @Override
     public void handler(TransferFrame frame, ByteBuf ret, ChannelHandlerContext ctx) {
-        int ctrlCode = frame.getProtocol() & ~0xf;
-        FrameHandler handler = handlers.get(ctrlCode);
-        if(handler==null){
-            MessageBox.getLogger().warn("UNKNOWN PROTOCOL: {}!",ctrlCode);
-            return;
-        }
         try{
-            handler.handler(frame,ret,ctx);
+            this.handlerSub(frame,ret,ctx);
         }catch (Throwable e){
             e.printStackTrace();
+        }finally {
+            if(ret!=null&&ret.refCnt()>0){
+                ret.release();
+            }
         }
     }
+
+    protected abstract void handlerSub(TransferFrame frame,ByteBuf ret, ChannelHandlerContext ctx) throws Exception;
 }

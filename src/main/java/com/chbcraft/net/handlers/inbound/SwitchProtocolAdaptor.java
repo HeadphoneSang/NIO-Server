@@ -4,7 +4,6 @@ import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.net.handlers.inbound.websocket.*;
 import com.chbcraft.net.util.RequestUtil;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;

@@ -16,15 +16,16 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class TaskCreatingHandler implements FrameHandler{
     @Override
     public void handler(TransferFrame frame, ByteBuf ret, ChannelHandlerContext ctx) throws Exception{
-        File tempFile = new File(frame.getAddition()+".tmp");
-        File tarFile = new File(frame.getAddition());
+        File tempFile = new File(frame.getAddition().get("path")+".tmp");
+        File tarFile = new File((String) frame.getAddition().get("path"));
         OperationInbound<?> h = null;
         if(ctx.handler() instanceof OperationInbound){
             h = ((OperationInbound<?>)ctx.handler());
             h.getFileInfo().setFileSize(frame.getData());
             h.getFileInfo().setTempFile(tempFile);
             h.getFileInfo().setTarFile(tarFile);
-            MessageBox.getLogger().log("上传任务管道建立中:{}",tarFile.getName());
+            h.getFileInfo().setUsername(frame.getAddition().get("username").toString());
+            MessageBox.getLogger().trace("上传任务管道建立中:{}",tarFile.getName());
         }
         if(tarFile.exists()){//目标文件已经存在了,无需上传直接返回文件存在
             FrameUtil.writeFrame(ret, TranProtocol.TASK_CREATING|TranProtocol.FILE_EXIST,0);

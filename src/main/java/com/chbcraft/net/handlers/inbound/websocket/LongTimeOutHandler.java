@@ -1,5 +1,6 @@
 package com.chbcraft.net.handlers.inbound.websocket;
 
+import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.WebFileResult;
 import com.chbcraft.net.handlers.inbound.websocket.utils.ResultUtil;
 import io.netty.channel.ChannelDuplexHandler;
@@ -17,11 +18,13 @@ public class LongTimeOutHandler extends ChannelDuplexHandler {
             ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).addListener(future -> {
                 ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).sync();
                 ctx.close();
+                MessageBox.getLogger().debug("连接超时");
             });
         } else if (e.state() == IdleState.WRITER_IDLE) {
             ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).addListener(future -> {
                 ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.CONNECT_ERROR,null))).sync();
                 ctx.close();
+                MessageBox.getLogger().debug("连接超时");
             });
         }
     }
