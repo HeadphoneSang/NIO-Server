@@ -226,4 +226,8 @@ public abstract class CustomPlugin extends BasePlugin {
         else
             logger.warnTips("File: config.yml has not found!");
     }
+
+    public String getJarName() {
+        return jarName;
+    }
 }

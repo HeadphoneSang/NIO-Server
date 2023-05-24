@@ -3,7 +3,7 @@ package com.chbcraft.net.handlers.inbound;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.listen.RegisteredRouter;
-import com.chbcraft.internals.components.sysevent.net.RequestInboundEvent;
+import com.chbcraft.internals.components.sysevent.net.http.RequestInboundEvent;
 import com.chbcraft.net.handlers.router.*;
 import com.chbcraft.net.handlers.outbound.HttpResponseMessage;
 import com.chbcraft.net.util.RequestUtil;
@@ -22,6 +22,7 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
         adaptor
                 .addSorter(RegisteredRouter.RouteMethod.POST.name(), new PostRequestSorter())
                 .addSorter(RegisteredRouter.RouteMethod.GET.name(), new GetRequestSorter())
+                .addSorter(RegisteredRouter.RouteMethod.DELETE.name(), new DeleteRequestSorter())
                 .addSorter(RegisteredRouter.RouteMethod.OPTIONS.name(), new OptionRequestSorter());
     }
     @Override

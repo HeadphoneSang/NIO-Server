@@ -41,5 +41,16 @@ public class TranProtocol {
      * 文件已存在,无需上传
      */
     public static final int FILE_EXIST = 0x06;
-
+    /**
+     * 申请创建控制连接
+     */
+    public static final int CREATE_CTRL = 0x07;
+    /**
+     * 创建控制连接成功
+     */
+    public static final int CTRL_CREATED = 0x08;
+    /**
+     * 创建控制连接失败
+     */
+    public static final int CTRL_FAILED = 0x09;
 }

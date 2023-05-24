@@ -7,7 +7,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.io.File;
 
 public class OperationInbound<T> extends SimpleChannelInboundHandler<T> {
+
     private final FileInfo fileInfo = new FileInfo();
+
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

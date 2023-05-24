@@ -1,0 +1,63 @@
+[17:33:20 INFO]: [CONSOLE] Security-IO is not enable...
+[17:33:20 INFO]: [DatabaseLib] service is running
+[17:33:20 INFO]: [DatabaseLib] initialized SqlSession success
+[17:33:20 INFO]: [FileMapperLib] has loaded
+[17:33:20 WARN]: [FileMapperLib] can't find a default url in config
+[17:33:20 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[17:33:20 WARN]: [FileMapperLib] can't find a default url in config
+[17:33:20 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[17:33:20 WARN]: [FileMapperLib] can't find a default url in config
+[17:33:20 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[17:33:20 WARN]: [CONSOLE] loaded libs:
+[17:33:20 INFO]: [CONSOLE] FileMapperLib
+[17:33:20 INFO]: [CONSOLE] DatabaseLib
+[17:33:20 INFO]: [NormalRouter] is loading
+[17:33:20 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 102ms
+[17:33:20 INFO]: [CONSOLE] Success Loaded 1 Plugin Spend 110ms
+[17:33:20 INFO]: [CONSOLE] server is initializing
+[17:33:21 INFO]: [CONSOLE] server is initialized
+[17:33:21 INFO]: [CONSOLE] launching.....
+[17:33:22 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:25565
+[17:33:34 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited
+[17:34:06 INFO]: [CONSOLE] Security-IO is not enable...
+[17:34:06 INFO]: [DatabaseLib] service is running
+[17:34:06 INFO]: [DatabaseLib] initialized SqlSession success
+[17:34:06 INFO]: [FileMapperLib] has loaded
+[17:34:06 WARN]: [FileMapperLib] can't find a default url in config
+[17:34:06 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[17:34:06 WARN]: [FileMapperLib] can't find a default url in config
+[17:34:06 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[17:34:06 WARN]: [FileMapperLib] can't find a default url in config
+[17:34:06 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[17:34:06 WARN]: [CONSOLE] loaded libs:
+[17:34:06 INFO]: [CONSOLE] FileMapperLib
+[17:34:06 INFO]: [CONSOLE] DatabaseLib
+[17:34:06 INFO]: [NormalRouter] is loading
+[17:34:06 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 87ms
+[17:34:06 INFO]: [CONSOLE] Success Loaded 1 Plugin Spend 92ms
+[17:34:06 INFO]: [CONSOLE] server is initializing
+[17:34:06 INFO]: [CONSOLE] server is initialized
+[17:34:06 INFO]: [CONSOLE] launching.....
+[17:34:07 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:25565
+[17:35:37 INFO]: [CONSOLE] Security-IO is not enable...
+[17:35:37 INFO]: [DatabaseLib] service is running
+[17:35:37 INFO]: [DatabaseLib] initialized SqlSession success
+[17:35:38 INFO]: [FileMapperLib] has loaded
+[17:35:38 WARN]: [FileMapperLib] can't find a default url in config
+[17:35:38 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[17:35:38 WARN]: [FileMapperLib] can't find a default url in config
+[17:35:38 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[17:35:38 WARN]: [FileMapperLib] can't find a default url in config
+[17:35:38 WARN]: [FileMapperLib] using the default dir: C:\Users\headp\Desktop\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[17:35:38 WARN]: [CONSOLE] loaded libs:
+[17:35:38 INFO]: [CONSOLE] FileMapperLib
+[17:35:38 INFO]: [CONSOLE] DatabaseLib
+[17:35:38 INFO]: [NormalRouter] is loading
+[17:35:38 INFO]: [CONSOLE] [PluginLoading][NormalRouter] has initialized! Spend 91ms
+[17:35:38 INFO]: [CONSOLE] Success Loaded 1 Plugin Spend 96ms
+[17:35:38 INFO]: [CONSOLE] server is initializing
+[17:35:38 INFO]: [CONSOLE] server is initialized
+[17:35:38 INFO]: [CONSOLE] launching.....
+[17:35:39 INFO]: [CONSOLE] server is listening on /0:0:0:0:0:0:0:0:25565
+[17:35:53 WARN]: [NormalRouter] 882,881,880,879,878,877,876,875,874,873,872,871,870,869,868,867,866,865,864,863,862,861,860,859,858,857,856,855,854,853
+[17:35:54 INFO]: [com.alibaba.druid.pool.DruidDataSource] {dataSource-1} inited

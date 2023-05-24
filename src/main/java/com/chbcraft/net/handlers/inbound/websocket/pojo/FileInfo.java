@@ -10,6 +10,7 @@ public class FileInfo {
     private long FileOffSet = 0;
     private String fileModifier;
     private String username;
+    private String uuid;
 
     public String getUsername() {
         return username;
@@ -65,5 +66,13 @@ public class FileInfo {
 
     public void setFileOffSet(long fileOffSet) {
         FileOffSet = fileOffSet;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

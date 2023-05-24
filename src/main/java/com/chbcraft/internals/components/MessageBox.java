@@ -2,8 +2,10 @@ package com.chbcraft.internals.components;
 
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.entries.config.Configuration;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public class MessageBox {
     private static MessageBox loggerBox = null;
@@ -18,6 +20,7 @@ public class MessageBox {
         if(messageHeader.equals(""))
             messageHeader = "CONSOLE";
         this.logger = LogManager.getLogger(messageHeader);
+        LoggerContext.getContext(false).getLogger(this.logger.getName()).setLevel(Level.INFO);
         Configuration prop = null;
         prop = FloatSphere.createProperties();
         if(prop!=null)

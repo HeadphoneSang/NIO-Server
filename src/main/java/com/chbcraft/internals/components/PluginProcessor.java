@@ -8,9 +8,8 @@ import com.chbcraft.internals.components.listen.*;
 import com.chbcraft.internals.components.loader.Loader;
 import com.chbcraft.internals.components.sysevent.Event;
 import com.chbcraft.internals.components.sysevent.EventExecutor;
-import com.chbcraft.internals.components.sysevent.PluginDisableEvent;
-import com.chbcraft.internals.components.sysevent.PluginLoadedEvent;
-import com.chbcraft.internals.components.utils.ConfigurationUtil;
+import com.chbcraft.internals.components.sysevent.plugin.PluginDisableEvent;
+import com.chbcraft.internals.components.sysevent.plugin.PluginLoadedEvent;
 import com.chbcraft.internals.components.utils.RegexUtil;
 import com.chbcraft.plugin.Plugin;
 import java.io.File;
@@ -114,6 +113,16 @@ public class PluginProcessor implements Loader {
                         if(annotation==null) {
                             annotation = tempMethod.getAnnotation(Post.class);
                         }
+                        if(annotation==null){
+                            for (Annotation da : tempMethod.getDeclaredAnnotations()) {
+                                Annotation temp = da.annotationType().getAnnotation(RouteType.class);
+                                if(temp!=null)
+                                {
+                                    annotation = da;
+                                    break;
+                                }
+                            }
+                        }
                     }while (annotation==null);
                 }while(tempMethod.isBridge());
             }while (tempMethod.isSynthetic());
@@ -130,12 +139,21 @@ public class PluginProcessor implements Loader {
                     continue;
             }
             else
-                if(!initGetRouter(newRouter,plugin,annotation,tempMethod))
+                if(!initPathRouter(newRouter,plugin,annotation,tempMethod))
                     continue;
             returnSet.add(newRouter);
         }
     }
 
+    private boolean initPathRouter(RegisteredRouter newRouter,Plugin plugin,Annotation annotation,Method tempMethod){
+        String value = "/";
+        if(annotation instanceof Get){
+            value = ((Get) annotation).value();
+        }else if(annotation instanceof Delete){
+            value = ((Delete) annotation).value();
+        }
+        return initPathRouter0(newRouter,plugin,annotation,tempMethod,value);
+    }
     /**
      * GET方法的路由的解析方法
      * @param newRouter 要添加到路由表的路由
@@ -144,11 +162,11 @@ public class PluginProcessor implements Loader {
      * @param tempMethod 路由的方法
      * @return 返回初始化是否从成功
      */
-    private boolean initGetRouter(RegisteredRouter newRouter,Plugin plugin,Annotation annotation,Method tempMethod){
-        Get get = (Get) annotation;
-        newRouter.setRoute(get.value());
+    private boolean initPathRouter0(RegisteredRouter newRouter,Plugin plugin,Annotation annotation,Method tempMethod,String value){
+//        Get get = (Get) annotation;
+        newRouter.setRoute(value);
         newRouter.setMethod(RegisteredRouter.RouteMethod.GET);
-        Map<String,Integer> varMap = RegexUtil.getPathVariable(get.value());
+        Map<String,Integer> varMap = RegexUtil.getPathVariable(value);
         int[] mapArr = new int[varMap.size()];
         /**
          * 检查GET的router是否声明为一个REST路由

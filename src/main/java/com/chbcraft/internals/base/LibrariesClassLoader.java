@@ -69,7 +69,8 @@ public class LibrariesClassLoader extends BaseComponentLoader {
                         initialedPlugin(main,pluginYml,jarFile.getName());
                         this.allLibs.put(name,main);
                         main.onEnable();
-                    } catch (Exception | Error e) {
+                    } catch (Throwable e) {
+                        MessageBox.getLogger().error("! Crashed in: {} plugin",name);
                         e.printStackTrace();
                     }
                 }

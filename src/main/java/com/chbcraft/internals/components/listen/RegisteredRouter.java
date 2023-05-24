@@ -2,8 +2,8 @@ package com.chbcraft.internals.components.listen;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.Routers;
-import com.chbcraft.net.handlers.inbound.websocket.event.RouterAfterExecuteEvent;
-import com.chbcraft.net.handlers.inbound.websocket.event.RouterBeforeExecuteEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.RouterAfterExecuteEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.RouterBeforeExecuteEvent;
 import com.chbcraft.plugin.Plugin;
 
 import java.lang.annotation.Annotation;
@@ -172,6 +172,7 @@ public class RegisteredRouter {
     }
 
     public enum RouteMethod {
+        DELETE("DELETE"),
         GET("GET"),
         OPTIONS("OPTIONS"),
         POST("POST");

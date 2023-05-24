@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class FloatPluginManager extends ManagerSup implements PluginManager{
-    private static final HashSet<String> disablePlugins = new HashSet<>();
+    private static final HashMap<String,String> disablePlugins = new HashMap<>();
     /**
      * 允许加载的最大插件数
      */
@@ -302,6 +302,11 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         return processor.getPluginNumber();
     }
 
+    @Override
+    public void recordPlugin(String name, String jarName) {
+        disablePlugins.put(name,jarName);
+    }
+
     /**
      * 尝试注销掉插件
      * 不能保证百分百注销,所以需要插件自己在onDisable里面释放一些资源
@@ -309,6 +314,10 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
      */
     @Override
     public void disablePlugin(String pluginName) {
+        CustomPlugin willDisPlugin = (CustomPlugin) ((PluginProcessor)this.processor).getPlugin(pluginName);
+        if(willDisPlugin!=null){
+            recordPlugin(pluginName, willDisPlugin.getJarName());
+        }
         processor.disablePlugin(((PluginProcessor)this.processor).getPlugin(pluginName));
         System.gc();
     }
@@ -346,7 +355,15 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
             MessageBox.getLogger().warn("plugin:["+pluginName+"]has already loaded!");
             return;
         }
-        File pluginFile = searchFileByName(pluginName,true);
+        String jarName = disablePlugins.get(pluginName);
+        File pluginFile = null;
+        if(jarName!=null){
+            pluginFile = new File(jarName);
+            pluginFile = pluginFile.exists()?pluginFile:null;
+        }
+        if(pluginFile==null){
+            searchFileByName(pluginName,true);
+        }
         if(pluginFile==null){
             MessageBox.getLogger().warn("The plugin "+pluginName+" is not a plugin or can not find!");
             return;
@@ -371,11 +388,6 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         if(processor!=null)
             strList = processor.getPluginList();
         return strList;
-    }
-
-    @Override
-    public void noticeDis(String name) {
-//        disablePlugins.add(name);
     }
 
     /**

@@ -3,7 +3,7 @@ package com.chbcraft.internals.base;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.PluginManager;
-import com.chbcraft.internals.components.sysevent.PluginCommandEvent;
+import com.chbcraft.internals.components.sysevent.plugin.PluginCommandEvent;
 import com.chbcraft.net.HttpProcessor;
 import io.netty.util.concurrent.DefaultPromise;
 

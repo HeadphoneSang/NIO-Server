@@ -98,7 +98,8 @@ public class RequestUtil {
     public static void sendOptionsResponse(ChannelHandlerContext ctx){
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         ResponseUtil.setDefaultHeaders(response.headers(),0);
-        response.headers().set(HttpHeaderNames.ALLOW,"OPTIONS, GET, POST");
+        response.headers().set(HttpHeaderNames.ALLOW,"OPTIONS, GET, POST, DELETE");
+        response.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS,"OPTIONS, GET, POST, DELETE");
         ctx.writeAndFlush(response);
     }
 

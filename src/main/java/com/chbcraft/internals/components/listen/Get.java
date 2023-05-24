@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @RouteType
-public @interface Get{
+public @interface Get {
     String value();
 }

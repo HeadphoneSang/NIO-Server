@@ -1,10 +1,11 @@
 package com.chbcraft.internals.components.enums;
 
 public enum SectionName {
+
     /**
-    * 失败重传
+    * 日志等级
      */
-    RELOAD_TIMES("reload_times"),
+    LOG_LEVEL("log-level"),
     /**
      * Websocket请求升级的url
      */

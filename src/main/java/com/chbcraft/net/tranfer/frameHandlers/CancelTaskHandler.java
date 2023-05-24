@@ -3,7 +3,7 @@ package com.chbcraft.net.tranfer.frameHandlers;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.net.handlers.inbound.websocket.TextFrameHandler;
-import com.chbcraft.net.handlers.inbound.websocket.event.FileUploadCancelEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.FileUploadCancelEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
 import com.chbcraft.net.tranfer.TransferFrame;
 import com.chbcraft.net.util.CodeUtil;

@@ -2,7 +2,7 @@ package com.chbcraft.net.handlers.outbound;
 
 import com.alibaba.fastjson.JSON;
 import com.chbcraft.internals.components.FloatSphere;
-import com.chbcraft.internals.components.sysevent.net.ResponseOutboundEvent;
+import com.chbcraft.internals.components.sysevent.net.http.ResponseOutboundEvent;
 import com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor;
 import com.chbcraft.net.util.ResponseUtil;
 import io.netty.channel.ChannelHandler;

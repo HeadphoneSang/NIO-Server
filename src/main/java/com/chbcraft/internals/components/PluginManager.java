@@ -19,7 +19,12 @@ public interface PluginManager extends AbstractManager{
     void registerRouters(Plugin plugin, Routers routers);
     void registerRouters(Plugin plugin,Routers...routers);
     List<String> getPluginList();
-    void noticeDis(String name);
+
+    /**
+     * 记录插件的名称与具体磁盘位置
+     * @param name
+     */
+    void recordPlugin(String name,String jarName);
     /**
      * 注销掉所有的正在运行的插件
      */

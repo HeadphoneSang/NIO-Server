@@ -2,7 +2,7 @@ package com.chbcraft.net.handlers.inbound;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
-import com.chbcraft.net.handlers.inbound.websocket.event.FileDownloadCompletedEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.FileDownloadCompletedEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
 import com.chbcraft.net.util.CodeUtil;
 import com.chbcraft.net.util.RequestUtil;
@@ -22,6 +22,8 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     private String downloadFilePath = null;
 
+    private int access = 0;
+
     private MessageBox log = MessageBox.getLogger();
 
     public HttpDownloadHandler(){
@@ -30,10 +32,13 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ctx.pipeline().remove(IdleStateHandler.class);
-        ctx.pipeline().remove(TimeOutHandler.class);
-        ctx.pipeline().remove(SwitchProtocolAdaptor.class);
-        ctx.pipeline().addAfter("aggregator","writerChunk",new ChunkedWriteHandler());
+        if (access++ == 0) {
+            ctx.pipeline().remove(IdleStateHandler.class);
+            ctx.pipeline().remove(TimeOutHandler.class);
+            ctx.pipeline().remove(SwitchProtocolAdaptor.class);
+            ctx.pipeline().remove(HttpMessageHandler.class);
+            ctx.pipeline().addAfter("aggregator","writerChunk",new ChunkedWriteHandler());
+        }
         super.channelRead(ctx,msg);
         ctx.flush();
     }
@@ -52,10 +57,9 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();
 
-        MessageBox.getLogger().log("init download");
+        MessageBox.getLogger().debug("init download");
         long start = System.currentTimeMillis();
         if (uri.startsWith("/download") && request.method().equals(HttpMethod.GET)) {
-            ctx.pipeline().remove("http");
             int end = uri.lastIndexOf("/");
             if(end==0){
                 RequestUtil.send405State(ctx);
@@ -91,7 +95,7 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
                         info.setFileModifier(modifier);
                         info.setUsername(finalUsername);
                         info.setFileName(file.getName());
-                        MessageBox.getLogger().log("download spend : "+(System.currentTimeMillis()-start) +"ms");
+                        MessageBox.getLogger().debug("download spend : "+(System.currentTimeMillis()-start) +"ms");
                         FileDownloadCompletedEvent event = new FileDownloadCompletedEvent(info);
                         FloatSphere.getPluginManager().callEvent(event);
                         if(event.isCancel()){

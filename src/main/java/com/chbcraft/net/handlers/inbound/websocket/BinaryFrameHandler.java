@@ -2,13 +2,9 @@ package com.chbcraft.net.handlers.inbound.websocket;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.MessageBox;
-import com.chbcraft.internals.components.enums.SectionName;
-import com.chbcraft.net.handlers.inbound.OperationInbound;
-import com.chbcraft.net.handlers.inbound.websocket.event.FileUploadCompletedEvent;
-import com.chbcraft.net.handlers.inbound.websocket.event.FileUploadInterruptEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.FileUploadCompletedEvent;
+import com.chbcraft.internals.components.sysevent.net.ws.FileUploadInterruptEvent;
 import com.chbcraft.net.handlers.inbound.websocket.pojo.FileInfo;
-import com.chbcraft.net.handlers.inbound.websocket.pojo.WebFileResult;
-import com.chbcraft.net.handlers.inbound.websocket.utils.ResultUtil;
 import com.chbcraft.net.tranfer.FrameUtil;
 import com.chbcraft.net.tranfer.TranProtocol;
 import com.chbcraft.net.util.CodeUtil;
@@ -19,16 +15,21 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
 
 public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame> {
+    /**
+     * 任务编号
+     */
+    private String uuid;
+    /**
+     * 开始任务的时间
+     */
     private long s;
     /**
      * 目标文件传输后正确的大小
@@ -58,6 +59,7 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        ctx.pipeline().get(TextFrameHandler.class).removeHandlerCtxByUUID(uuid);
         if(fc!=null&&fc.isOpen()){
             fc.close();
             FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
@@ -81,7 +83,7 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
         if(start==size){//文件完整传输完毕
             fc.close();
             Files.move(tempFile.toPath(),tarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            MessageBox.getLogger().trace("File: {} received spend: {} ms",tarFile.getName(),System.currentTimeMillis()-s);
+            MessageBox.getLogger().debug("File: {} received spend: {} ms",tarFile.getName(),System.currentTimeMillis()-s);
             FrameUtil.writeFrame(ret,TranProtocol.TASK_COMPLETED,size);
         }else if(start>size){//文件传输不一致
             fc.close();
@@ -107,6 +109,7 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
      */
     public void initTaskInfo(ChannelHandlerContext ctx) throws IOException {
         FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
+        uuid = info.getUuid();
         tarFile = info.getTarFile();
         tempFile = info.getTempFile();
         fc = FileChannel.open(tempFile.toPath(), StandardOpenOption.WRITE);
