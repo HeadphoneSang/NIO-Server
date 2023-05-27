@@ -5,6 +5,8 @@ import com.chbcraft.internals.components.listen.RegisteredRouter;
 import com.chbcraft.internals.components.sysevent.PluginEvent;
 import com.chbcraft.net.handlers.outbound.HttpResponseMessage;
 
+import java.lang.annotation.Annotation;
+
 /**
  * 响应出站事件,发生在响应封装完毕,即将出站的最后一步,可以在这里修改响应体,拦截响应,获得请求的地址和类型等
  */
@@ -77,11 +79,11 @@ public class ResponseOutboundEvent extends PluginEvent {
 
     /**
      * 查看route处理器的是否有某个注解标注
-     * @param name 搜索的名字
+     * @param tag 标签类型
      * @return 返回是否有这个标注
      */
-    public boolean routeHasTag(String name){
-        return message.hasTag(name);
+    public boolean routeHasTag(Class<? extends Annotation> tag){
+        return message.hasTag(tag);
     }
 
 

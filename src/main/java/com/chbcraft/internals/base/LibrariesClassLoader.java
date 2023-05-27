@@ -28,6 +28,7 @@ public class LibrariesClassLoader extends BaseComponentLoader {
             File tempFile = new File(fileUrl.getPath());
             boolean flag = true;
             if(!tempFile.exists()){
+                MessageBox.getLogger().warnTips("we can not find a libs directory? try to initialize from source....");
                 JarInitialUtils.readDirectoryFromJarToCd(Objects.requireNonNull(FloatSphere.getSelfFile()),"libs",tempFile,true);
                 if(!tempFile.exists())
                     flag = tempFile.mkdirs();

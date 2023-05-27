@@ -2,6 +2,8 @@ package com.chbcraft.net.handlers.outbound;
 
 import com.chbcraft.internals.components.listen.RegisteredRouter;
 import io.netty.handler.codec.http.FullHttpResponse;
+
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 
@@ -13,7 +15,7 @@ public class HttpResponseMessage {
     /**
      * 请求处理的标签
      */
-    private final HashMap<String,Object> tags = new HashMap<>(3);
+    private final HashMap<Class<? extends Annotation>,Annotation> tags = new HashMap<>(3);
     /**
      * 请求体元数据
      */
@@ -46,14 +48,13 @@ public class HttpResponseMessage {
         return response.headers().get(header);
     }
 
-    public void addTags(String tag){
-        this.tags.put(tag,null);
+    public void addTags(Annotation tag){
+        this.tags.put(tag.annotationType(),tag);
     }
 
-    public boolean hasTag(String tag){
-        return tags.containsKey(tag);
+    public boolean hasTag(Class<? extends Annotation> clazz){
+        return tags.containsKey(clazz);
     }
-
     public Object getOriginalBody() {
         return originalBody;
     }
@@ -80,5 +81,10 @@ public class HttpResponseMessage {
 
     public void setMethod(RegisteredRouter.RouteMethod method) {
         this.method = method;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getTag(Class<T> tagType){
+        return tagType.cast(tags.get(tagType));
     }
 }

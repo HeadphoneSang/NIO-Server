@@ -6,6 +6,7 @@ import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.net.handlers.inbound.HttpMessageHandler;
 import com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor;
 import com.chbcraft.net.handlers.inbound.TimeOutHandler;
+import com.chbcraft.net.handlers.outbound.HttpResourceResponseHandler;
 import com.chbcraft.net.handlers.outbound.ResponseWriterHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -44,6 +45,7 @@ public class NioHttpAcceptor extends HttpAcceptor{
                         .addLast("adaptor",new SwitchProtocolAdaptor())
                         .addLast("http",new HttpMessageHandler())
 //                        .addLast("downloadHandler",new HttpDownloadHandler())
+                        .addLast("resourceDeliver",new HttpResourceResponseHandler())
                         .addLast("messageDeliver",new ResponseWriterHandler());
             }
         });
@@ -54,7 +56,14 @@ public class NioHttpAcceptor extends HttpAcceptor{
     void accepting() {
         logger.log("launching.....");
         server.bind().addListener((ChannelFutureListener) future ->
-                logger.log("server is listening on "+future.channel().localAddress()));
+        {
+            if(future.isSuccess())
+                logger.log("SERVER IS LISTENING ON: "+future.channel().localAddress());
+            else{
+                logger.error("!PORT CONFLICT!");
+                System.exit(-1);
+            }
+        });
 
     }
 

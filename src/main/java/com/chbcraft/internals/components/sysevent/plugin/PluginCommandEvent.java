@@ -17,7 +17,7 @@ public class PluginCommandEvent extends PluginEvent {
         }
     }
     @Override
-    public HandlerList getHandler() {
+    protected HandlerList getHandler() {
         return handlerList;
     }
     public String getCommand(){
@@ -26,7 +26,7 @@ public class PluginCommandEvent extends PluginEvent {
     public String[] getArgs(){
         return this.args;
     }
-    public static HandlerList getHandlerList(){
+    private static HandlerList getHandlerList(){
         return handlerList;
     }
 }

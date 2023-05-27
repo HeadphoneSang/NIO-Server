@@ -47,7 +47,7 @@ public class TaskCreateHandler implements FrameHandler{
                 FrameUtil.writeFrame(ret,TranProtocol.TASK_FAILED,0);
             }
         }else if(tempFile.createNewFile()){//临时文件目标文件都不存在，直接建立新文件,创建新任务
-            ((TextFrameHandler)ctx).putCtx(String.valueOf(frame.getAddition().get("uuid")),ctx);
+            ((TextFrameHandler)ctx.handler()).putCtx(String.valueOf(frame.getAddition().get("uuid")),ctx);
             FrameUtil.writeFrame(ret,TranProtocol.TASK_CREATING|TranProtocol.NEW_TASK,0);
         }else{//异常错误,未知
             FrameUtil.writeFrame(ret,TranProtocol.TASK_FAILED,0);

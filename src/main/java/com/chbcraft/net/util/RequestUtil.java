@@ -156,11 +156,11 @@ public class RequestUtil {
      */
     public static HttpResponseMessage createResponseMessage(Object original, RegisteredRouter router){
         HttpResponseMessage ret = new HttpResponseMessage(original);
-        Collection<Class<? extends Annotation>> tags = router.getTags();
+        Collection<Annotation> tags = router.getTags();
         if(tags==null)
             return ret;
-        for (Class<? extends Annotation> tag : router.getTags()) {
-            ret.addTags(tag.getSimpleName());
+        for (Annotation tag : router.getTags()) {
+            ret.addTags(tag);
         }
         return ret;
     }

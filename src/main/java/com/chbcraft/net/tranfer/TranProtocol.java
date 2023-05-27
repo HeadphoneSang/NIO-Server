@@ -53,4 +53,12 @@ public class TranProtocol {
      * 创建控制连接失败
      */
     public static final int CTRL_FAILED = 0x09;
+    /**
+     * PING
+     */
+    public static final int PING = 0xa;
+    /**
+     * PONG
+     */
+    public static final int PONG = 0xb;
 }

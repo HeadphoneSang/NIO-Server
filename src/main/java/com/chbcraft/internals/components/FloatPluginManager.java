@@ -10,6 +10,7 @@ import com.chbcraft.internals.components.loader.Loader;
 import com.chbcraft.internals.components.sysevent.Event;
 import com.chbcraft.internals.components.sysevent.ManagerSup;
 import com.chbcraft.internals.components.utils.ConfigurationUtil;
+import com.chbcraft.internals.components.utils.JarInitialUtils;
 import com.chbcraft.plugin.Plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -246,8 +247,11 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
         File file = new File(PLUGIN_PATH);
         File[] files;
         boolean flag = true;
-        if(!file.exists())
+        if(!file.exists()) {
+            MessageBox.getLogger().warnTips("we can not find a plugins directory? try to initialize from source....");
             flag = file.mkdirs();
+            JarInitialUtils.readDirectoryFromJarToCd(FloatSphere.getSelfFile(),"plugins",file,true);
+        }
         files = file.listFiles(pathname -> pathname.getName().endsWith(".jar"));
         ArrayList<PluginEntry> pluginEntries = new ArrayList<>();
         Map<String,Object> tags = new HashMap<>();
@@ -362,7 +366,7 @@ public class FloatPluginManager extends ManagerSup implements PluginManager{
             pluginFile = pluginFile.exists()?pluginFile:null;
         }
         if(pluginFile==null){
-            searchFileByName(pluginName,true);
+            pluginFile = searchFileByName(pluginName,true);
         }
         if(pluginFile==null){
             MessageBox.getLogger().warn("The plugin "+pluginName+" is not a plugin or can not find!");

@@ -2,6 +2,7 @@ package com.chbcraft.net.handlers.inbound.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.chbcraft.internals.components.FloatSphere;
+import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.net.handlers.inbound.OperationInbound;
 import com.chbcraft.internals.components.sysevent.net.ws.WebSocketOpenEvent;
 import com.chbcraft.net.tranfer.*;
@@ -12,9 +13,12 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
+
+    private String uuid;
 
     private static final FrameAdaptor ctrlAdaptor = new CtrlFrameAdaptor();
 
@@ -23,7 +27,14 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
      * 键是UUID
      * 值是上传任务的数据管道上下文对象
      */
-    private static final ConcurrentHashMap<String,ChannelHandlerContext> TASK_MAP = new ConcurrentHashMap<>();
+    private static final Map<String,ChannelHandlerContext> TASK_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * 用来存储上传任务控制连接的表
+     * 键是UUID
+     * 值是上传任务的数据管道上下文对象
+     */
+    private static final Map<String,ChannelHandlerContext> CTRL_MAP = new ConcurrentHashMap<>();
 
     static{
         FrameHandler createHandler = new TaskCreateHandler();
@@ -35,13 +46,14 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
                 )
                 .addFrameHandler(TranProtocol.TASK_RUNNING,new TaskRunningHandler()
                     .addFrameHandler(TranProtocol.CANCEL_CONTINUE,new CancelTaskHandler())
+                    .addFrameHandler(TranProtocol.PING,new PingHandler())
                 )
                 .addFrameHandler(TranProtocol.TASK_COMPLETED,new TaskCompletedHandler());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+        MessageBox.getLogger().trace(TASK_MAP.size()+" "+CTRL_MAP.size());
         super.channelInactive(ctx);
     }
 
@@ -49,7 +61,7 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
         if(evt == WebSocketServerProtocolHandler.ServerHandshakeStateEvent.HANDSHAKE_COMPLETE){
-            FloatSphere.getPluginManager().callEvent(new WebSocketOpenEvent());
+//            FloatSphere.getPluginManager().callEvent(new WebSocketOpenEvent());
         }else{
             super.userEventTriggered(ctx, evt);
         }
@@ -83,10 +95,48 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
      * @return 返回记录是否成功
      */
     public boolean putCtx(String uuid,ChannelHandlerContext ctx){
-        if(TASK_MAP.contains(uuid))
+        if(TASK_MAP.containsKey(uuid))
             return false;
         TASK_MAP.put(uuid, ctx);
         return true;
+    }
+
+    /**
+     * 记录上传控制任务通道
+     * @param uuid 唯一标识
+     * @param ctx 上下文
+     * @return 返回记录是否成功l
+     */
+    public boolean putCtCtx(String uuid,ChannelHandlerContext ctx){
+        if(CTRL_MAP.containsKey(uuid))
+            return false;
+        CTRL_MAP.put(uuid, ctx);
+        return true;
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        if(uuid!=null){
+            if(ctx.pipeline().get(BinaryFrameHandler.class)==null){//控制连接
+                ChannelHandlerContext dataCtx = TASK_MAP.get(uuid);
+                if(dataCtx!=null){
+                    dataCtx.close();
+                    TASK_MAP.remove(uuid);
+                    CTRL_MAP.remove(uuid);
+                    MessageBox.getLogger().trace("{}连接已断开",uuid);
+                }
+            }else{//数据连接
+                ChannelHandlerContext ctrlCtx = CTRL_MAP.get(uuid);
+                if(ctrlCtx!=null){
+                    ctrlCtx.close();
+                    TASK_MAP.remove(uuid);
+                    CTRL_MAP.remove(uuid);
+                    MessageBox.getLogger().trace("{}连接已断开",uuid);
+                }
+            }
+
+        }
+        super.channelUnregistered(ctx);
     }
 
     /**
@@ -98,7 +148,44 @@ public class TextFrameHandler extends OperationInbound<TextWebSocketFrame> {
         return TASK_MAP.get(uuid);
     }
 
+    /**
+     * 通过uuid删除任务的数据连接上下文
+     * @param uuid 任务的uuid
+     */
     public void removeHandlerCtxByUUID(String uuid){
         TASK_MAP.remove(uuid);
+    }
+
+    /**
+     * 通过uuid获得任务的数据连接的上下文
+     * @param uuid 人物的uuid
+     * @return 返回上下文对象
+     */
+    public ChannelHandlerContext getCtlHandlerContext(String uuid){
+        return CTRL_MAP.get(uuid);
+    }
+
+    /**
+     * 通过uuid删除任务的控制连接上下文对象
+     * @param uuid 人物的uuid
+     */
+    public void removeCtlHandlerCtxByUUID(String uuid){
+        CTRL_MAP.remove(uuid);
+    }
+
+    /**
+     * 获得任务的uuid
+     * @return
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * 设置人物的uuid
+     * @param uuid
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

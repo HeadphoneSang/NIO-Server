@@ -13,11 +13,13 @@ import io.netty.channel.ChannelHandlerContext;
 public class CancelTaskHandler implements FrameHandler{
     @Override
     public void handler(TransferFrame frame, ByteBuf ret, ChannelHandlerContext ctx) throws Exception {
+//        FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
+//        String name = info.getFileName()!=null?info.getFileName():info.getTarFile().getName();
+//        MessageBox.getLogger().warnTips("!connection is canceled:{} by user: {}",name,info.getUsername());
         ctx.close();
         //触发取消任务事件
-        FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
-        String name = info.getFileName()!=null?info.getFileName():info.getTarFile().getName();
-        MessageBox.getLogger().warnTips("!connection is canceled:{} by user: {}",name,info.getUsername());
-        FloatSphere.getPluginManager().callEvent(new FileUploadCancelEvent(CodeUtil.encodeBase64(info.getTempFile().getAbsolutePath()),System.currentTimeMillis(),info.getUsername()));
+//        ctx.pipeline().get(TextFrameHandler.class).removeHandlerCtxByUUID();
+
+//        FloatSphere.getPluginManager().callEvent(new FileUploadCancelEvent(CodeUtil.encodeBase64(info.getTempFile().getAbsolutePath()),System.currentTimeMillis(),info.getUsername()));
     }
 }

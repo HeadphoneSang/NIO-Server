@@ -59,12 +59,21 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        ctx.pipeline().get(TextFrameHandler.class).removeHandlerCtxByUUID(uuid);
+        if(uuid!=null){
+            TextFrameHandler txtHandler = ctx.pipeline().get(TextFrameHandler.class);
+            ChannelHandlerContext ctlCtx= txtHandler.getCtlHandlerContext(uuid);
+            if(ctlCtx!=null){
+                ctlCtx.close();
+                txtHandler.removeCtlHandlerCtxByUUID(uuid);
+                txtHandler.removeHandlerCtxByUUID(uuid);
+            }
+        }
+
         if(fc!=null&&fc.isOpen()){
             fc.close();
             FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
             MessageBox.getLogger().warnTips("!Abnormal connection interruption:{}",info.getFileName());
-            FloatSphere.getPluginManager().callEvent(new FileUploadInterruptEvent(CodeUtil.encodeBase64(tempFile.getAbsolutePath()),s,info.getUsername()));
+            FloatSphere.getPluginManager().callEvent(new FileUploadInterruptEvent(CodeUtil.encodeBase64(tempFile.getAbsolutePath()),s,info.getUsername(),tempFile.getName(),tarFile.getName()));
         }else{
             if(size>0&&size==start){
                 FileInfo info = ctx.pipeline().get(TextFrameHandler.class).getFileInfo();
@@ -139,6 +148,7 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        MessageBox.getLogger().warn("unsafe close!");
         cause.printStackTrace();
     }
 

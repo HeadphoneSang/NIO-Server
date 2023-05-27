@@ -11,10 +11,16 @@ public class FileUploadInterruptEvent extends PluginEvent {
 
     private final String username;
 
-    public FileUploadInterruptEvent(String modifier,long time,String username){
+    private final String tempFileName;
+
+    private final String tarFileName;
+
+    public FileUploadInterruptEvent(String modifier,long time,String username,String tempFileName,String tarFileName){
         this.modifier = modifier;
         this.uploadTime = time;
         this.username = username;
+        this.tarFileName = tarFileName;
+        this.tempFileName = tempFileName;
     }
 
     public long getUploadTime() {
@@ -58,5 +64,13 @@ public class FileUploadInterruptEvent extends PluginEvent {
     @Override
     public boolean isCancel() {
         return super.isCancel();
+    }
+
+    public String getTempFileName() {
+        return tempFileName;
+    }
+
+    public String getTarFileName() {
+        return tarFileName;
     }
 }

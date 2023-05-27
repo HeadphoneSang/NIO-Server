@@ -34,7 +34,7 @@ public class RegisteredRouter {
     /**
      * 路由方法的标签
      */
-    private Map<Class<? extends Annotation>,Object> tags;
+    private Map<Class<? extends Annotation>,Annotation> tags;
     /**
      * 是否是RESTFUL
      */
@@ -130,17 +130,17 @@ public class RegisteredRouter {
         return tags != null && (tags.get(tag) != null);
     }
 
-    public Collection<Class<? extends Annotation>> getTags(){
+    public Collection<Annotation> getTags(){
         if(tags==null)
             return null;
-        return Collections.unmodifiableCollection(tags.keySet());
+        return Collections.unmodifiableCollection(tags.values());
     }
 
-    public void addTags(Class<? extends Annotation> tag) {
+    public void addTags(Annotation tag) {
         if(this.tags==null){
             this.tags = new HashMap<>();
         }
-        this.tags.put(tag,placeHolder);
+        this.tags.put(tag.annotationType(),tag);
     }
 
     /**

@@ -131,7 +131,7 @@ public class PluginProcessor implements Loader {
             for (Annotation tag : tags) {
                 if(tag.annotationType().getAnnotation(RouteType.class)!=null)
                     continue;
-                newRouter.addTags(tag.annotationType());
+                newRouter.addTags(tag);
             }
             if(annotation instanceof Post)
             {
