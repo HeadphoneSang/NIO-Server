@@ -102,11 +102,11 @@ public class MessageBox {
     }
 
     public void trace(Object msg){
-        logger.debug(msg);
+        logger.trace(msg);
     }
 
     public void trace(String msg,Object...params){
-        logger.debug(msg, params);
+        logger.trace(msg, params);
     }
 
     public void debug(Object obj){

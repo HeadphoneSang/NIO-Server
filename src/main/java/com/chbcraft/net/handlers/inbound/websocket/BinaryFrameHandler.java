@@ -60,13 +60,12 @@ public class BinaryFrameHandler extends SimpleChannelInboundHandler<BinaryWebSoc
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         if(uuid!=null){
-            TextFrameHandler txtHandler = ctx.pipeline().get(TextFrameHandler.class);
-            ChannelHandlerContext ctlCtx= txtHandler.getCtlHandlerContext(uuid);
-            if(ctlCtx!=null){
-                ctlCtx.close();
-                txtHandler.removeCtlHandlerCtxByUUID(uuid);
-                txtHandler.removeHandlerCtxByUUID(uuid);
-            }
+//            TextFrameHandler txtHandler = ctx.pipeline().get(TextFrameHandler.class);
+//            ChannelHandlerContext ctlCtx= txtHandler.getCtlHandlerContext(uuid);
+//            if(ctlCtx!=null){
+//                ctlCtx.close();
+//
+//            }
         }
 
         if(fc!=null&&fc.isOpen()){

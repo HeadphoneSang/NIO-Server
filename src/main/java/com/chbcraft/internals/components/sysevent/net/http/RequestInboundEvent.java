@@ -5,6 +5,7 @@ import com.chbcraft.internals.components.listen.RegisteredRouter;
 import com.chbcraft.internals.components.sysevent.PluginEvent;
 import com.chbcraft.net.handlers.inbound.HttpRequestImp;
 import com.chbcraft.net.handlers.inbound.HttpRequestMessage;
+import io.netty.handler.codec.http.FullHttpResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -67,5 +68,17 @@ public class RequestInboundEvent extends PluginEvent implements HttpRequestImp {
     @Override
     public String protocolVersion() {
         return message.protocolVersion();
+    }
+
+    public FullHttpResponse getResponse(){
+        return message.getResponse();
+    }
+
+    public boolean isStop(){
+        return message.isStop();
+    }
+
+    public void stop(){
+        message.stop();
     }
 }

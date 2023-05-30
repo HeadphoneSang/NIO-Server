@@ -3,7 +3,7 @@ package com.chbcraft.net.handlers.inbound;
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.enums.SectionName;
 import com.chbcraft.internals.components.listen.RegisteredRouter;
-import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.*;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -15,10 +15,21 @@ public class HttpRequestMessage implements HttpRequestImp {
     /**
      * 用于代理的请求体
      */
-    private FullHttpRequest request;
+    private final FullHttpRequest request;
+
+    private FullHttpResponse response;
+
+    private boolean isStop = false;
 
     public HttpRequestMessage(FullHttpRequest request){
         this.request = request;
+    }
+
+    public FullHttpResponse getResponse() {
+        if(response==null){
+            this.response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+        }
+        return response;
     }
 
     /**
@@ -90,4 +101,14 @@ public class HttpRequestMessage implements HttpRequestImp {
         return request.protocolVersion().toString();
     }
 
+    /**
+     * 停止向后传播给路由处理器
+     */
+    public void stop(){
+        this.isStop = true;
+    }
+
+    public boolean isStop() {
+        return isStop;
+    }
 }

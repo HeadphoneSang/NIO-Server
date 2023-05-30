@@ -13,6 +13,6 @@ public class ContinuationInbound extends SimpleChannelInboundHandler<Continuatio
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ContinuationWebSocketFrame msg) throws Exception {
-        System.out.println(1);
+
     }
 }

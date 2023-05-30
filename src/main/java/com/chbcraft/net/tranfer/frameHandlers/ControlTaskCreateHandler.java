@@ -20,8 +20,7 @@ import java.nio.charset.Charset;
 public class ControlTaskCreateHandler implements FrameHandler{
     @Override
     public void handler(TransferFrame frame, ByteBuf ret, ChannelHandlerContext ctx) throws Exception {
-        String uuid = String.valueOf(frame.getAddition().get("uuid"));
-        MessageBox.getLogger().debug("控制管道：{}，建立中...",uuid);
+        MessageBox.getLogger().debug("控制管道：建立中...");
         IdleStateHandler time = ctx.pipeline().get(IdleStateHandler.class);
         BinaryFrameHandler binaryFrameHandler = ctx.pipeline().get(BinaryFrameHandler.class);
         if(time!=null){
@@ -31,17 +30,10 @@ public class ControlTaskCreateHandler implements FrameHandler{
         if(binaryFrameHandler!=null){
             ctx.pipeline().remove(BinaryFrameHandler.class);
         }
-        ctx.pipeline().get(TextFrameHandler.class).setUuid(uuid);
-        ChannelHandlerContext dataCtx = ((TextFrameHandler)ctx.handler()).getHandlerContext(uuid);
-        if(dataCtx!=null){
-            ctx.pipeline().get(TextFrameHandler.class).putCtCtx(uuid,ctx);
-            FrameUtil.writeFrame(ret, TranProtocol.TASK_CREATING|TranProtocol.CTRL_CREATED,0);
-        }else{
-            FrameUtil.writeFrame(ret,TranProtocol.TASK_CREATING|TranProtocol.CTRL_FAILED,0);
-        }
+        FrameUtil.writeFrame(ret,TranProtocol.TASK_CREATING|TranProtocol.CTRL_CREATED,0);
         ctx.writeAndFlush(new TextWebSocketFrame(ret)).addListener((future -> {
             if(!future.isSuccess()){
-                MessageBox.getLogger().warnTips("{}控制连接已失效",uuid);
+                MessageBox.getLogger().warnTips("控制连接已失效");
             }
         }));
     }
