@@ -1,19 +1,14 @@
 package com.chbcraft.net.handlers.outbound;
 
 import com.chbcraft.internals.components.FloatSphere;
-import com.chbcraft.internals.components.MessageBox;
 import com.chbcraft.internals.components.listen.Resource;
 import com.chbcraft.net.util.ImageUtil;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import net.coobird.thumbnailator.Thumbnails;
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.annotation.Annotation;
 
 public class HttpResourceResponseHandler extends ChannelOutboundHandlerAdapter {
 
@@ -102,10 +97,24 @@ public class HttpResourceResponseHandler extends ChannelOutboundHandlerAdapter {
      * @param headers 响应头
      */
     public void writeResponse(ChannelHandlerContext ctx,Object retObj,HttpHeaders headers){
+        long count = 0;
+        if(retObj instanceof DefaultFileRegion){
+            DefaultFileRegion dfr = (DefaultFileRegion) retObj;
+            count = dfr.count();
+            if(dfr.count()>5*ImageUtil.MB&&ctx.pipeline().get("idleStateHandler")!=null){
+                ctx.pipeline().remove("idleStateHandler");
+                ctx.pipeline().remove("timeoutHandler");
+            }
+        }
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.OK,headers);
         ctx.write(response);
         ctx.write(retObj);
-        ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+        long finalCount = count;
+        ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT).addListener(future -> {
+            if (future.isSuccess()&& finalCount >(5*ImageUtil.MB)) {
+                ctx.close();
+            }
+        });
     }
 
 

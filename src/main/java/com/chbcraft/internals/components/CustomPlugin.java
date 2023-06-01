@@ -227,6 +227,35 @@ public abstract class CustomPlugin extends BasePlugin {
             logger.warnTips("File: config.yml has not found!");
     }
 
+    protected boolean loadDefaultResource(String innerFileName, File outFile) throws IOException {
+        InputStream ip = getDefaultResource(innerFileName);
+        if(ip==null){
+            MessageBox.getLogger().warnTips("file {} is not found in jar",outFile.getName());
+            return false;
+        }
+        byte[] buff = new byte[1024];
+        int length;
+        FileOutputStream op = null;
+        try {
+            op = new FileOutputStream(outFile);
+            while ((length = ip.read(buff))!=-1) {
+                op.write(buff,0,length);
+            }
+            return true;
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                if(op!=null)
+                    op.close();
+                ip.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public String getJarName() {
         return jarName;
     }

@@ -48,7 +48,7 @@ public class HttpMessageHandler extends SimpleChannelInboundHandler<FullHttpRequ
         FloatSphere.getPluginManager().callEvent(event);
         if(event.isStop()){
             channelHandlerContext.writeAndFlush(event.getResponse());
-//            ResponseUtil.send403Forbidden(channelHandlerContext);
+            ResponseUtil.send403Forbidden(channelHandlerContext);
             return;
         }
         RequestSorter sorter = adaptor.getSorter(request.method().name());

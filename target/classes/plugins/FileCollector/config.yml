@@ -1,0 +1,7 @@
+auto-gc: true
+check-rate: 3600000
+gc-suffix: 'tmp'
+over-time: 3600000
+filter-list:
+  - test.txt.tmp
+
