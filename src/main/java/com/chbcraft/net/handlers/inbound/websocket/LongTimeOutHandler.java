@@ -15,17 +15,11 @@ public class LongTimeOutHandler extends ChannelDuplexHandler {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         IdleStateEvent e = (IdleStateEvent) evt;
         if (e.state() == IdleState.READER_IDLE) {
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).addListener(future -> {
-                ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).sync();
-                ctx.close();
-                MessageBox.getLogger().debug("连接超时");
-            });
+            ctx.close();
+            MessageBox.getLogger().debug("连接超时");
         } else if (e.state() == IdleState.WRITER_IDLE) {
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.TIME_OUT,null))).addListener(future -> {
-                ctx.channel().writeAndFlush(new TextWebSocketFrame(ResultUtil.getResultString(WebFileResult.CONNECT_ERROR,null))).sync();
-                ctx.close();
-                MessageBox.getLogger().debug("连接超时");
-            });
+            ctx.close();
+            MessageBox.getLogger().debug("连接超时");
         }
     }
 

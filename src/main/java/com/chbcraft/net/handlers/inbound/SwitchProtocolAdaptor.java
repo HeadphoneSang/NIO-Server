@@ -40,9 +40,6 @@ public class SwitchProtocolAdaptor extends SimpleChannelInboundHandler<FullHttpR
             ctx.pipeline().remove("timeoutHandler");
             ctx.pipeline().remove("http");
             ctx.pipeline().remove("resourceDeliver");
-            long time = FloatSphere.getProperties().getInt(SectionName.LONG_TIME_OUT.value());
-            ctx.pipeline().addFirst("idleStateHandler",new IdleStateHandler(time,time,time, TimeUnit.SECONDS))
-                    .addAfter("idleStateHandler","timeoutHandler",new LongTimeOutHandler());
             ctx.pipeline()
                     .addLast("websocket",new WebSocketServerProtocolHandler(FloatSphere.getProperties().getString(SectionName.WS_URL.value()),null,true,5*1024*1024))
                     .addLast("frameSwitch",new WebSocketFrameHandler())

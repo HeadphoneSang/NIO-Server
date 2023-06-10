@@ -15,15 +15,6 @@ import java.nio.charset.StandardCharsets;
 
 @ChannelHandler.Sharable
 public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
-//    @Override
-//    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-//        super.disconnect(ctx, promise);
-//    }
-//
-//    @Override
-//    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-//        super.close(ctx, promise);
-//    }
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -32,27 +23,11 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
             return;
         }
         HttpResponseMessage responseMessage = (HttpResponseMessage)msg;
-        FullHttpResponse response;
-//        MimetypesFileTypeMap
         if(responseMessage.hasTag(Resource.class)){
             super.write(ctx, msg, promise);
             return;
         }
-        try{
-            String retMsg = JSON.toJSONString(responseMessage.getOriginalBody());
-            response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-            byte[] res = retMsg.getBytes(StandardCharsets.UTF_8);
-            response.content().writeBytes(res);
-            ResponseUtil.setDefaultHeaders(response.headers(),res.length);
-        }catch (Exception e){
-            response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.INTERNAL_SERVER_ERROR);
-            response.content().writeBytes("500 INTERNAL ERROR".getBytes(StandardCharsets.UTF_8));
-            promise.addListener(future -> {
-                System.out.println("close1");
-                if (future.isSuccess())
-                    ctx.close();
-            });
-        }
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         responseMessage.setResponse(response);
         ResponseOutboundEvent event = new ResponseOutboundEvent(responseMessage);
         FloatSphere.getPluginManager().callEvent(event);
@@ -60,6 +35,28 @@ public class ResponseWriterHandler extends ChannelOutboundHandlerAdapter {
             response.setStatus(HttpResponseStatus.FORBIDDEN);
             response.content().clear();
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH,0);
+        }else{
+            try{
+                if(response.headers().get(HttpHeaderNames.CONTENT_TYPE)==null||response.headers().get(HttpHeaderNames.CONTENT_TYPE).startsWith("application/json")){
+                    String retMsg = JSON.toJSONString(responseMessage.getOriginalBody());
+                    byte[] res = retMsg.getBytes(StandardCharsets.UTF_8);
+                    response.content().writeBytes(res);
+                    ResponseUtil.setDefaultHeaders(response.headers(),res.length);
+                }else{
+                    String retMsg = String.valueOf(responseMessage.getOriginalBody());
+                    response.content().writeBytes(retMsg.getBytes(StandardCharsets.UTF_8));
+                    ResponseUtil.setDefaultHeadersVoid(response.headers(),response.content().readableBytes());
+                }
+            }catch (Exception e){
+                response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.INTERNAL_SERVER_ERROR);
+                responseMessage.setResponse(response);
+                response.content().writeBytes("500 INTERNAL ERROR".getBytes(StandardCharsets.UTF_8));
+                promise.addListener(future -> {
+                    System.out.println("close1");
+                    if (future.isSuccess())
+                        ctx.close();
+                });
+            }
         }
         super.write(ctx, responseMessage.getResponse(), promise);
         super.flush(ctx);

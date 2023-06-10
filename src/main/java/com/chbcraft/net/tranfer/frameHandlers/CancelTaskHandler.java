@@ -22,6 +22,7 @@ public class CancelTaskHandler implements FrameHandler{
                 return;
             }
             txtHandler.removeHandlerCtxByUUID(uuid);
+            dataCtx.close();
             MessageBox.getLogger().debug("{}管道已注销",uuid);
         }
         else{

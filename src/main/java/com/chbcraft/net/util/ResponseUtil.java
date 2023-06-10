@@ -17,6 +17,14 @@ public class ResponseUtil {
         headers.set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         headers.set(HttpHeaderNames.ACCESS_CONTROL_MAX_AGE,"2592000");
     }
+    public static void setDefaultHeadersVoid(HttpHeaders headers,int length){
+        headers.set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS,"*");
+        headers.set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN,"*");
+        headers.set(HttpHeaderNames.DATE,new Date().toString());
+        headers.set(HttpHeaderNames.CONTENT_LENGTH,length);
+        headers.set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        headers.set(HttpHeaderNames.ACCESS_CONTROL_MAX_AGE,"2592000");
+    }
 
     /**
      * 发送403禁止请求

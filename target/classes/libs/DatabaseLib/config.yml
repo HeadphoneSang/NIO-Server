@@ -1,2 +1,0 @@
-data-source: com.alibaba.druid.pool.DruidDataSource
-sqlite-source: filedb.db
