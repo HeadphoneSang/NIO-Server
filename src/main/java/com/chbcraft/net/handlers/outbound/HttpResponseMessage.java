@@ -1,7 +1,9 @@
 package com.chbcraft.net.handlers.outbound;
 
 import com.chbcraft.internals.components.listen.RegisteredRouter;
+import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpResponse;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ public class HttpResponseMessage {
     /**
      * 请求整体
      */
-    private FullHttpResponse response;
+    private HttpResponse response;
     /**
      * 请求处理的标签
      */
@@ -28,7 +30,7 @@ public class HttpResponseMessage {
      * 路由方法
      */
     private RegisteredRouter.RouteMethod method;
-    public HttpResponseMessage(FullHttpResponse response,Object originalBody){
+    public HttpResponseMessage(HttpResponse response,Object originalBody){
         this.response = response;
         this.originalBody = originalBody;
     }
@@ -59,11 +61,11 @@ public class HttpResponseMessage {
         return originalBody;
     }
 
-    public void setResponse(FullHttpResponse response) {
+    public void setResponse(HttpResponse response) {
         this.response = response;
     }
 
-    FullHttpResponse getResponse(){
+    HttpResponse getResponse(){
         return this.response;
     }
 

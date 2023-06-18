@@ -2,6 +2,7 @@ package com.chbcraft.net.handlers.outbound;
 
 import com.chbcraft.internals.components.FloatSphere;
 import com.chbcraft.internals.components.listen.Resource;
+import com.chbcraft.internals.components.sysevent.net.http.ResponseOutboundEvent;
 import com.chbcraft.net.util.ImageUtil;
 import com.chbcraft.net.util.RequestUtil;
 import io.netty.channel.*;
@@ -74,14 +75,14 @@ public class HttpResourceResponseHandler extends ChannelOutboundHandlerAdapter {
                             ImageUtil.saveFileToCache(cache,bs);
                         }
                         headers.set(HttpHeaderNames.CONTENT_LENGTH,bs.size());
-                        writeResponse(ctx,ctx.alloc().buffer().writeBytes(bs.toByteArray()),headers);
+                        writeResponse(ctx,ctx.alloc().buffer().writeBytes(bs.toByteArray()),headers,message);
                         bs.close();
                         return;
                     }
                 }
                 RandomAccessFile raf = new RandomAccessFile(res,"r");
                 headers.set(HttpHeaderNames.CONTENT_LENGTH,raf.length());
-                writeResponse(ctx,new DefaultFileRegion(raf.getChannel(),0,raf.length()),headers);
+                writeResponse(ctx,new DefaultFileRegion(raf.getChannel(),0,raf.length()),headers,message);
             }else{
                 super.write(ctx,msg,promise);
             }
@@ -96,7 +97,7 @@ public class HttpResourceResponseHandler extends ChannelOutboundHandlerAdapter {
      * @param retObj 回写数据内容
      * @param headers 响应头
      */
-    public void writeResponse(ChannelHandlerContext ctx,Object retObj,HttpHeaders headers){
+    public void writeResponse(ChannelHandlerContext ctx,Object retObj,HttpHeaders headers,HttpResponseMessage message){
         long count = 0;
         if(retObj instanceof DefaultFileRegion){
             DefaultFileRegion dfr = (DefaultFileRegion) retObj;
@@ -107,6 +108,8 @@ public class HttpResourceResponseHandler extends ChannelOutboundHandlerAdapter {
             }
         }
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.OK,headers);
+        message.setResponse(response);
+        FloatSphere.getPluginManager().callEvent(new ResponseOutboundEvent(message));
         ctx.write(response);
         ctx.write(retObj);
         long finalCount = count;

@@ -1,0 +1,114 @@
+[22:31:02 INFO]: [CONSOLE] server is running
+[22:31:02 INFO]: [CONSOLE] LOG LEVEL: info
+[22:31:02 INFO]: [CONSOLE] Security-IO is not enable...
+[22:31:02 INFO]: [DatabaseLib] service is running
+[22:31:02 INFO]: [CONSOLE] USING DATABASE DRIVER: org.sqlite.JDBC
+[22:31:03 INFO]: [DatabaseLib] initialized SqlSession success
+[22:31:03 INFO]: [FileMapperLib] has loaded
+[22:31:03 WARN]: [FileMapperLib] can't find a default url in config
+[22:31:03 WARN]: [FileMapperLib] using the default dir: D:\毕业设计包\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\files
+[22:31:03 WARN]: [FileMapperLib] can't find a default url in config
+[22:31:03 WARN]: [FileMapperLib] using the default dir: D:\毕业设计包\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\recycle
+[22:31:03 WARN]: [FileMapperLib] can't find a default url in config
+[22:31:03 WARN]: [FileMapperLib] using the default dir: D:\毕业设计包\毕设结构设计模型\BaseEventLoopServer\target\classes\libs\FileMapperLib\lock
+[22:31:03 WARN]: [CONSOLE] loaded libs:
+[22:31:03 INFO]: [CONSOLE] FileMapperLib
+[22:31:03 INFO]: [CONSOLE] DatabaseLib
+[22:31:03 INFO]: [Updater] Updater is Running
+[22:31:03 INFO]: [NormalRouter] is loading
+[22:31:03 INFO]: [FileCollector] File GC is loading 
+[22:31:03 INFO]: [FileCollector] Auto gc: true
+[22:31:03 INFO]: [CONSOLE] Success Loaded 3 Plugin Spend 166ms
+[22:31:03 INFO]: [CONSOLE] server is initializing
+[22:31:03 INFO]: [CONSOLE] server is initialized
+[22:31:03 INFO]: [CONSOLE] launching.....
+[22:31:04 INFO]: [CONSOLE] SERVER IS LISTENING ON: /0:0:0:0:0:0:0:0:25565
+[22:33:01 ERROR]: [com.alibaba.druid.pool.DruidDataSource] init datasource error, url: jdbc:sqlite:libs/DatabaseLib/filedb.db
+java.sql.SQLException: path to 'libs/DatabaseLib/filedb.db': 'D:\毕业设计包\毕设结构设计模型\BaseEventLoopServer\libs' does not exist
+	at org.sqlite.SQLiteConnection.open(SQLiteConnection.java:215) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.sqlite.SQLiteConnection.<init>(SQLiteConnection.java:61) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.sqlite.jdbc3.JDBC3Connection.<init>(JDBC3Connection.java:28) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.sqlite.jdbc4.JDBC4Connection.<init>(JDBC4Connection.java:21) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.sqlite.JDBC.createConnection(JDBC.java:115) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.sqlite.JDBC.connect(JDBC.java:90) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidAbstractDataSource.createPhysicalConnection(DruidAbstractDataSource.java:1468) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidAbstractDataSource.createPhysicalConnection(DruidAbstractDataSource.java:1533) ~[DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidDataSource.init(DruidDataSource.java:864) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidDataSource.getConnection(DruidDataSource.java:1215) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidDataSource.getConnection(DruidDataSource.java:1211) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.alibaba.druid.pool.DruidDataSource.getConnection(DruidDataSource.java:105) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.openConnection(JdbcTransaction.java:138) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.getConnection(JdbcTransaction.java:60) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:336) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:85) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:324) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:140) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:76) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:87) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:57) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.sun.proxy.$Proxy29.getUserByUsername(Unknown Source) [?:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_291]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_291]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_291]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_291]
+	at org.chbcraft.MapperFactory$1.invoke(MapperFactory.java:22) [DatabaseSupportLib-1.0-SNAPSHOT-jar-with-dependencies.jar:?]
+	at com.sun.proxy.$Proxy29.getUserByUsername(Unknown Source) [?:?]
+	at org.base.main.router.LoginRouter.checkPassword(LoginRouter.java:47) [NormalRouterPlugin-1.0-SNAPSHOT.jar:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_291]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_291]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_291]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_291]
+	at com.chbcraft.internals.components.listen.RegisteredRouter.execute(RegisteredRouter.java:106) [classes/:?]
+	at com.chbcraft.net.handlers.router.GetRequestSorter.handlerRestGet(GetRequestSorter.java:75) [classes/:?]
+	at com.chbcraft.net.handlers.router.GetRequestSorter.handler(GetRequestSorter.java:52) [classes/:?]
+	at com.chbcraft.net.handlers.router.RequestSorter.handlerRequest(RequestSorter.java:15) [classes/:?]
+	at com.chbcraft.net.handlers.inbound.HttpMessageHandler.channelRead0(HttpMessageHandler.java:55) [classes/:?]
+	at com.chbcraft.net.handlers.inbound.HttpMessageHandler.channelRead0(HttpMessageHandler.java:19) [classes/:?]
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at com.chbcraft.net.handlers.inbound.HttpMessageHandler.channelRead(HttpMessageHandler.java:30) [classes/:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor.channelRead0(SwitchProtocolAdaptor.java:72) [classes/:?]
+	at com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor.channelRead0(SwitchProtocolAdaptor.java:20) [classes/:?]
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at com.chbcraft.net.handlers.inbound.SwitchProtocolAdaptor.channelRead(SwitchProtocolAdaptor.java:30) [classes/:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:102) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:438) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:293) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:267) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:253) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:86) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:287) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:340) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1334) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:362) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:348) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:926) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:134) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:624) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:559) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:476) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:438) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:858) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144) [netty-all-4.1.9.Final.jar:4.1.9.Final]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_291]
