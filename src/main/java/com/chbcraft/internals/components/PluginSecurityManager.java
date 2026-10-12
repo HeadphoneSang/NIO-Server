@@ -18,6 +18,7 @@ public class PluginSecurityManager extends SecurityManager{
         if(!pluginsFileDir.exists()){
             if(!pluginsFileDir.mkdirs()){
                 throw new IllegalArgumentException();
+                
             }
         }
         for(File nowFile : Objects.requireNonNull(pluginsFileDir.listFiles(),"plugins is not find!")){

@@ -32,6 +32,7 @@ public class PluginProcessor implements Loader {
      * 是否允许开启插件跨域访问
      */
     private boolean enableCrossDomain = true;
+
     /**
      * 管理所有插件的Class对象与对应的全限定名
      */

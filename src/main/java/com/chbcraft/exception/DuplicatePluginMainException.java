@@ -8,6 +8,7 @@ public class DuplicatePluginMainException extends RuntimeException{
     public void printStackTrace() {
         super.printStackTrace();
         MessageBox.getLogger().error("Reason on: ["+pluginName+"] Can Not be new twice!");
+
     }
 
     public DuplicatePluginMainException(String pluginName) {

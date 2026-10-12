@@ -16,7 +16,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LibrariesClassLoader extends BaseComponentLoader {
+public class  LibrariesClassLoader extends BaseComponentLoader {
     private final File libFile;
     private final ConcurrentHashMap<String, Plugin> allLibs = new ConcurrentHashMap<>();
     public LibrariesClassLoader(URL[] urls, ClassLoader parent) {
