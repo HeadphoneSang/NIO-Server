@@ -103,7 +103,7 @@ public class RegisteredRouter {
         if(params==null){
             ret = handlerMethod.invoke(routers);
         }
-        ret = handlerMethod.invoke(routers,params);
+        ret = handlerMethod.invoke(routers,params); // 执行器参数解码错误bug
         info.clearParams();
         info.setResult(ret);
         FloatSphere.getPluginManager().callEvent(new RouterAfterExecuteEvent(info));
